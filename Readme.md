@@ -4,7 +4,7 @@ This course is somewhat agnostic on how the student implements the prescribed co
 
 I assume you have already installed Vagrant on your system.
 
-Provisioning for the VM's is found in the [Vagrantfile][vagrantfile]
+Provisioning for the VM's is found in the [Vagrantfile][Vagrantfile]
 
 Step through the [m03.sh][module_3] file to begin. 
 
