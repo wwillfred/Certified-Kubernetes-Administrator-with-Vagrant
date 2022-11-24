@@ -15,10 +15,10 @@ Install vagrant plugin for managing disk size, if desired (the course suggests 1
 ```
 vagrant plugin install vagrant-disksize
 ```
-The [disk-extend script][vagrant/disk-extend.sh] is called by the `Vagrantfile` to resize the filesystems in each VM.
+The [disk-extend script][/vagrant/disk-extend.sh] is called by the `Vagrantfile` to resize the filesystems in each VM.
 
 ## Vagrantfile
-Provisioning for the VM's is found in the [Vagrantfile][vagrant/Vagrantfile]
+Provisioning for the VM's is found in the [Vagrantfile][/vagrant/Vagrantfile]
 ```
 cd vagrant
 vagrant up
