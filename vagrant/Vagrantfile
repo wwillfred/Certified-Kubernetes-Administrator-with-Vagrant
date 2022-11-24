@@ -70,9 +70,13 @@ Vagrant.configure("2") do |config|
 
 # provision the four nodes for this Kubernetes cluster
   config.vm.provision "shell", inline: "echo swapoff -a"
- 
+  
+# run a script to provision each box to format the filesystem
+  config.vm.provision "shell", path: "disk-extend.sh"
+
   config.vm.define "c1-cp1" do |c1cp1|
     c1cp1.vm.box = "bento/ubuntu-18.04"
+    c1cp1.disksize.size = '100GB'
     c1cp1.vm.network "private_network", ip: "172.16.94.10"
     c1cp1.vm.hostname = "c1-cp1"
     c1cp1.vm.provider "virtualbox" do |vb|
@@ -83,6 +87,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "c1-node1" do |c1node1|
     c1node1.vm.box = "bento/ubuntu-18.04"
+    c1node1.disksize.size = '100GB'
     c1node1.vm.network "private_network", ip: "172.16.94.11"
     c1node1.vm.hostname = "c1-node1"
     c1node1.vm.provider "virtualbox" do |vb|
@@ -93,6 +98,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "c1-node2" do |c1node2|
     c1node2.vm.box = "bento/ubuntu-18.04"
+    c1node2.disksize.size = '100GB'
     c1node2.vm.network "private_network", ip: "172.16.94.12"
     c1node2.vm.hostname = "c1-node2"
     c1node2.vm.provider "virtualbox" do |vb|
@@ -103,6 +109,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define "c1-node3" do |c1node3|
     c1node3.vm.box = "bento/ubuntu-18.04"
+    c1node3.disksize.size = '100GB'
     c1node3.vm.network "private_network", ip: "172.16.94.13"
     c1node3.vm.hostname = "c1-node3"
     c1node3.vm.provider "virtualbox" do |vb|
