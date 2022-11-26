@@ -11,19 +11,22 @@ sudo cp networks.conf /etc/vbox/networks.conf
 ```
 
 ## Specify disk size
-Install vagrant plugin for managing disk size, if desired (the course suggests 100GB for each VM):
+Before calling `vagrant up`, you will need to install a vagrant plugin for managing disk size (the course suggests 100GB for each VM, but I'm not sure if that much space is strictly necessary):
 ```
 vagrant plugin install vagrant-disksize
 ```
-The [disk-extend script](vagrant/disk-extend.sh) is called by the `Vagrantfile` to resize the filesystems in each VM.
+The [disk-extend script](vagrant/disk-extend.sh) resizes the filesystems in each VM the first time `vagrant up` is run.
 
-## Vagrantfile
-Provisioning for the VM's is found in the [Vagrantfile](vagrant/Vagrantfile)
+# Make the first vagrant up call
+
 ```
 cd vagrant
 vagrant up
 ```
-Check that swap is disabled in each VM (e.g. in node c1-cp1)([source][1]:
+
+## Check that each VM is correctly provisioned
+
+Check that swap is disabled in each VM (e.g. in node c1-cp1)([source][1]):
 ```
 vagrant ssh c1-cp1
 sudo swapon --show
@@ -36,8 +39,6 @@ df -h /
 ```
 
 ## Getting started
-Step through the [m03.sh][module_3] file to begin. 
+Step through the [m03.sh](m03.sh) file to begin. 
 
-[vagrantfile]:Vagrantfile
-[module_3]:m03.sh
 [1]: https://unix.stackexchange.com/questions/23072/how-can-i-check-if-swap-is-active-from-the-command-line
