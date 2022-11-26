@@ -17,7 +17,7 @@ vagrant plugin install vagrant-disksize
 ```
 The [disk-extend script](vagrant/disk-extend.sh) resizes the filesystems in each VM the first time `vagrant up` is run.
 
-# Make the first vagrant up call
+## Make the first vagrant up call
 
 ```
 cd vagrant
