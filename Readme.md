@@ -2,7 +2,7 @@
 
 The instructor for this course is somewhat agnostic on how the student implements the prescribed configurations, so I created this repository as an example implementation using Vagrant and VirtualBox.
 
-I assume you have already installed Vagrant on your system.
+This assumes you have already installed Vagrant on your system.
 
 ## IP address ranges
 You will need to specify the VM address ranges using the `networks.conf` file in this repository:
@@ -23,10 +23,11 @@ Provisioning for the VM's is found in the [Vagrantfile](vagrant/Vagrantfile)
 cd vagrant
 vagrant up
 ```
-Check that swap is disabled (e.g. in node c1-cp1):
+Check that swap is disabled in each VM (e.g. in node c1-cp1)([source][1]:
 ```
 vagrant ssh c1-cp1
-vi /etc/fstab
+sudo swapon --show
+# if this command has no output, then swap is disabled
 ```
 Check that available disk size is ~100GB (e.g. in node c1-cp1):
 ```
@@ -39,3 +40,4 @@ Step through the [m03.sh][module_3] file to begin.
 
 [vagrantfile]:Vagrantfile
 [module_3]:m03.sh
+[1]: https://unix.stackexchange.com/questions/23072/how-can-i-check-if-swap-is-active-from-the-command-line

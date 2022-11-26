@@ -3,11 +3,11 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "base"
 
-# provision the four nodes for this Kubernetes cluster
-  config.vm.provision "shell", inline: "echo swapoff -a"
-  
 # run a script to provision each box to format the filesystem
   config.vm.provision "shell", path: "disk-extend.sh"
+
+# run a script to disable swap on each virtual machine
+  config.vm.provision "shell", path: "disable-swap.sh"
 
   config.vm.define "c1-cp1" do |c1cp1|
     c1cp1.vm.box = "bento/ubuntu-18.04"
