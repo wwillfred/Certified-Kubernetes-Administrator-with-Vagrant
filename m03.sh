@@ -119,3 +119,19 @@ kubectl get pods --all-namespaces --watch
 
 # Get a list of our current nodes, just the Control Plane Node node ... should be Ready
 kubectl get nodes
+
+# 2 systemd Units...again!
+# Check out the systemd unit...it's no longer crashlooping because it has static pods to start
+# Remember the kubelet starts the static pods, and thus the control plane pods
+sudo systemctl status kubelet.service
+
+# 3 - Status Pod manifests
+# Let's check out the static pod manifests on the Control Plane Node
+ls /etc/kubernetes/manifests
+
+# And look more closely at API server and etcd's manifest.
+sudo more /etc/kubernetes/manifests/etcd.yaml
+sudo more /etc/kubernetes/manifests/kube-apiserver.yaml
+
+# Check out the directory where the kubeconfig files live for each of the control plan pods.
+ls /etc/kubernetes
