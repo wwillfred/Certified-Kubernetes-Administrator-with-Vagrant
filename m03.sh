@@ -3,6 +3,10 @@
 ## Installing and Configuring containerd
 
 ### 0 - Install packages
+
+# ssh into c1-cp1
+vagrant ssh c1-cp1
+
 # containerd prerequisites, first load two modules and configure them to load on boot
 # https://kubernetes.io.docs/setup/production-environment/container-runtimes/
 sudo modprobe overlay
@@ -135,3 +139,36 @@ sudo more /etc/kubernetes/manifests/kube-apiserver.yaml
 
 # Check out the directory where the kubeconfig files live for each of the control plan pods.
 ls /etc/kubernetes
+
+# disconnect from c1-cp1
+exit
+
+
+## Create nodes - containerd
+
+# For this demo, ssh into c1-node1
+vagrant ssh c1-node1
+
+# Disable swap, swapoff then edit your fstab removing any entry for swap partitions
+# You can recover the space with fdisk. You may want to reboot to ensure your config is ok.
+swapoff -a
+vi /etc/fstab
+
+###IMPORTANT####
+# I expect this code to change a bit to make the installation process more streamlined.
+# Overall, the end result will stay the same...you'll have continerd installed
+# I will keep the code in the course downloads up to date with the latest method.
+################
+
+# 0 - Joining Nodes to a Cluster
+
+#Install a container runtime - containerd
+# containerd prerequisites, and load two modules and configure them to load on boot
+# https://kubernetes.io/docs/setup/production-environment/container-runtimes/
+cat <<EOF | sudo tee /etc/modules-load.d/k8s.conf
+overlay
+br_netfilter
+EOF
+
+sudo modprobe overlay
+sudo modprobe br_netfilter

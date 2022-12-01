@@ -24,7 +24,7 @@ cd vagrant
 vagrant up
 ```
 
-## Check that each VM is correctly provisioned
+## Check that each VM is correctly configured
 
 Check that swap is disabled in each VM (e.g. in node c1-cp1)([source][1]):
 ```
