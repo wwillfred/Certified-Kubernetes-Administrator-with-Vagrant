@@ -202,8 +202,47 @@ sudo containerd config default | sudo tee /etc/containerd/config.toml
 #          [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
             SystemdCgroup = true
 
-# You can use sed to swap in true
+# ... To do this, use sed to swap in true
 sudo sed -i 's/            SystemdCgroup = false/            SystemdCgroup = true/' /etc/containerd/config.toml
 
 # Verify the change was made
 sudo vi /etc/containerd/config.toml
+
+# Restart containerd with the new configuration
+sudo systemctl restart containerd
+
+
+# Install Kubernetes packages - kubeadm, kubelet, and kubectl
+# Add Google's apt repository gpg key
+sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+
+# Add the Kubernetes apt repository
+echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+# Update the package list
+sudo apt-get update
+apt-cache policy kubelet | head -n 20
+
+# Install the required packages, if needed we can request a specific version.
+# Pick the same version you used on the Control Plane Node above.
+VERSION=1.24.3-00
+sudo apt-get install -y kubelet=$VERSION kubeadm=$VERSION kubectl=$VERSION
+sudo apt-mark hold kubelet kubeadm kubectl containerd
+
+#To install the latest, omit the version parameters, just make sure you're installing the same versions as on your Control Plane Node.
+#sudo apt-get install kubelet kubeadm kubectl
+#sudo apt-mark hold kubelet kubeadm kubectl
+
+# Check the status of our kubelet and our container runtime.
+# The kubelet will enter a crashloop until it's joined, but the containerd is up and running.
+sudo systemctl status kubelet.service
+sudo systemctl status containerd.service
+
+# Ensure both are set to start when the system starts up.
+sudo systemctl enable kubelet.service
+sudo systemctl enable containerd.service
+
+# Log out of c1-node1 and back on to c1-cp1
+exit
+
+
