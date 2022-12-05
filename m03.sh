@@ -67,7 +67,7 @@ sudo apt-mark hold kubelet kubeadm kubectl containerd
 #sudo apt-get install kubelet kubeadm kubectl
 #sudo apt-mark hold kubelet kubeadm kubectl containerd
 
-### 1 - systemd Unites
+### 1 - systemd Units
 # Check the status of our kubelet and our container runtime, containerd.
 # The kubelet will enter a crashloop until a cluster is created or the node is joined to an existing cluster.
 sudo systemctl status kubelet.service
