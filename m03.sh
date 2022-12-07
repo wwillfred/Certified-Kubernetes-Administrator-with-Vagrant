@@ -148,7 +148,7 @@ exit
 
 ## Create nodes - containerd
 
-# For this demo, ssh into c1-node1
+# For this demo, ssh into c1-node1 (and subsequently for c1-node2 and c1-node3)
 vagrant ssh c1-node1
 
 # Disable swap, swapoff then edit your fstab removing any entry for swap partitions
@@ -266,9 +266,7 @@ exit
 vagrant ssh c1-node1
 
 # PASTE JOIN COMMAND HERE be sure to add sudo
-sudo kubeadm join 172.16.94.10:6443 \
-  --token fmd8x8.3sxwaktkkyo3f3wo \
-  --discovery-token-ca-cert-hash sha256:308187d7ff45bd17fe979a6afe511775a864d9cab916d055bd831adbe5ed6600 
+kubeadm join 172.16.94.10:6443 --token tyh8nn.pax246t4bxp9eg66 --discovery-token-ca-cert-hash sha256:4882de9115e58d44c7e1515886c4722a838c61e16cc9b2483538bcffd56ccf44 
 
 # Log out of c1-node1 and back on to c1-cp1
 exit
