@@ -99,8 +99,8 @@ wget https://docs.projectcalico.org/manifests/calico.yaml
 vi calico.yaml
 
 # You can now just use kubeadm init to bootstrap the cluster
-# the IP addresses are important because Vagrant's default host IP address is not the one used in private (i.e., host-only) networks.
-sudo kubeadm init --kubernetes-version v1.24.3 --apiserver-advertise-address="172.16.94.10" --apiserver-cert-extra-sans="172.16.94.10"
+# the IP addresses are important because of Vagrant's networking implementation.
+sudo kubeadm init --kubernetes-version v1.24.3 --apiserver-advertise-address="172.16.94.10" --apiserver-cert-extra-sans="172.16.94.10" --pod-network-cidr=192.168.0.0/16
 
 # sudo kubeadm init # remove the kubernetes-version parameter if you want to use the latest.
 
