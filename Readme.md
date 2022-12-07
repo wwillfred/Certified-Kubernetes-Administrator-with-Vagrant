@@ -1,11 +1,13 @@
-# Completing Pluralsight: "Kubernetes Installation and Configuration Fundamentals" with Vagrant
+Installing and configuring Kubernetes using Vagrant
 
-The instructor for this course is somewhat agnostic on how the student implements the prescribed configurations, so I created this repository as an example implementation using Vagrant and VirtualBox.
+This repository serves as step-by-step instructions for installing a Kubernetes cluster on Vagrant virtual machines running Ubuntu 18.04. Most of the steps come from the Pluralsight course [Kubernetes Installing and Configuration Fundamentals](https://www.pluralsight.com/courses/kubernetes-installation-configuration-fundamentals); however, in this repo I've included steps that account for Vagrant's networking quirks.
 
-This assumes you have already installed Vagrant on your system.
+For a repo that uses similar steps and automates the installation and configuration steps, check out [this repo](https://github.com/techiescamp/vagrant-kubeadm-kubernetes)
+
+These steps assume you have already installed Vagrant on your system.
 
 ## IP address ranges
-You will need to specify the VM address ranges using the `networks.conf` file in this repository:
+You will need to specify the VM address ranges using the [networks.conf](vagrant/networks.conf) file:
 ```
 sudo cp networks.conf /etc/vbox/networks.conf
 ```
