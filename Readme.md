@@ -42,6 +42,6 @@ df -h /
 ```
 
 ## v. Getting started
-Step through the [m03.sh](m03.sh) file to begin. 
+Step through the [m03.sh](exercise-modules/m03.sh) file to begin. 
 
 [1]: https://unix.stackexchange.com/questions/23072/how-can-i-check-if-swap-is-active-from-the-command-line
