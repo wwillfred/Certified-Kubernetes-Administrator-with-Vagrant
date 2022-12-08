@@ -14,8 +14,8 @@ You will need to specify the VM address ranges using the [networks.conf](vagrant
 sudo cp networks.conf /etc/vbox/networks.conf
 ```
 
-## ii. Specify disk size
-Before calling `vagrant up`, you will need to install a vagrant plugin for managing disk size (the course suggests 100GB for each VM, but I'm not sure if that much space is strictly necessary):
+## ii. Specify disk size, if desired
+If you want to specify disk size of the virtual machines: Before calling `vagrant up`, you will need to install a vagrant plugin for managing disk size (the course suggests 100GB for each VM, but I'm not sure if that much space is strictly necessary):
 ```
 vagrant plugin install vagrant-disksize
 ```

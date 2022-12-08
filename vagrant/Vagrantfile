@@ -1,12 +1,12 @@
-DISK_SIZE='50GB'
+# DISK_SIZE='50GB'
 
 Vagrant.configure("2") do |config|
   config.vm.box = "base"
 
-# if desired, run a script to provision each box to format the filesystem
+# if a specific disk size is desired, run a script to provision each box to format the filesystem
 # config.vm.provision "shell", path: "disk-extend.sh"
 
-# run a script to disable swap on each virtual machine
+# required: run a script to disable swap on each virtual machine
   config.vm.provision "shell", path: "disable-swap.sh"
 
   config.vm.define "c1-cp1" do |c1cp1|
