@@ -9,7 +9,7 @@ For a repo that uses similar steps and automates the installation and configurat
 These steps assume you have already installed Vagrant on your system.
 
 ## i. IP address ranges
-You will need to specify the VM address ranges using the [networks.conf](vagrant/networks.conf) file:
+You will need to specify the VM address ranges by copying the [networks.conf](vagrant/networks.conf) file:
 ```
 sudo cp networks.conf /etc/vbox/networks.conf
 ```
