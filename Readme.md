@@ -24,7 +24,7 @@ If you want to specify disk size of the virtual machines: Before calling `vagran
 ```
 vagrant plugin install vagrant-disksize
 ```
-Then you will need to uncomment out the lines in the [Vagrantfile](vagrant/Vagrantfile) relevant to disk size, including running the [disk-extend.sh](vagrant/disk-extend.sh] script.
+Then you will need to uncomment out the lines in the [Vagrantfile](vagrant/Vagrantfile) relevant to disk size, including running the [disk-extend.sh](vagrant/disk-extend.sh) script.
 
 ## iii. Make the first vagrant up call
 
