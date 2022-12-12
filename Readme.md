@@ -20,10 +20,11 @@ sudo cp networks.conf /etc/vbox/networks.conf
 ```
 
 ## ii. Specify disk size, if desired
-If you want to specify disk size of the virtual machines: Before calling `vagrant up`, you will need to install a vagrant plugin for managing disk size (the course suggests 100GB for each VM, but I'm not sure if that much space is strictly necessary):
+If you want to specify disk size of the virtual machines: Before calling `vagrant up`, you will need to install the vagrant plugin 'vagrant-disksize' for managing disk size (the course suggests 100GB for each VM, but I'm not sure if that much space is strictly necessary):
 ```
 vagrant plugin install vagrant-disksize
 ```
+Then you will need to uncomment out the lines in the [Vagrantfile](vagrant/Vagrantfile) relevant to disk size.
 
 ## iii. Make the first vagrant up call
 
@@ -40,13 +41,13 @@ vagrant ssh c1-cp1
 sudo swapon --show
 # if this command has no output, then swap is disabled
 ```
-Check that available disk size is ~100GB (e.g. in node c1-cp1):
+(If you specified disk size:) Check that available disk size is ~100GB (e.g. in node c1-cp1):
 ```
 vagrant ssh c1-cp1
 df -h /
 ```
 
 ## v. Getting started
-Step through [m03-01_Installing_and_configuring_containerd.sh](exercise-modules/m03-01_Installing_and_configuring_containerd.sh) to begin. 
+Step through [m03-01_installing_and_configuring_containerd.sh](exercise-modules/m03-01_installing_and_configuring_containerd.sh) to begin. 
 
 [1]: https://unix.stackexchange.com/questions/23072/how-can-i-check-if-swap-is-active-from-the-command-line
