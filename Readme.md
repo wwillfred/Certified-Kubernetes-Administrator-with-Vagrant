@@ -3,8 +3,8 @@
 *This repo is a work in progress*
 
 ## Issues
-[] Add code for configuring internal ip addresses for each node
-[] Research bridged networking as potential simpler solution
+- [] Add code for configuring internal ip addresses for each node
+- [] Research bridged networking as potential simpler solution
 
 ## Overview
 This repository provides step-by-step instructions for installing a Kubernetes cluster on Vagrant virtual machines running Ubuntu 18.04. Most of the steps come from the Pluralsight course [Kubernetes Installation and Configuration Fundamentals](https://www.pluralsight.com/courses/kubernetes-installation-configuration-fundamentals); however, in this repo I've modified the instructions to use Vagrant instead of VMware.
