@@ -102,3 +102,77 @@ kubectl delete service hello-world
 kubectl delete deployment hello-world
 kubectl delete pod hello-world-pod
 kubectl get all
+
+# Deploying resources declaratively in your cluster.
+# We can use apply to create our resources from yaml.
+# We could write the yaml by hand...but we can use dry-run=client to build it for us
+# This can used as a template for more complex deployments.
+kubectl create deployment hello-world \
+     --image=gcr.io/google-samples/hello-app:1.0 \
+     --dry-run=client -o yaml | more
+
+# Let's write this deployment yaml out to file
+kubectl create deployment hello-world \
+     --image=gcr.io/google-samples/hello-app:1.0 \
+     --dry-run=client -o yaml > deployment.yaml
+
+# The contents of the yaml file show the definition of the Deployment
+more deployment.yaml
+
+# Create the deployment...declaratively...in code
+kubectl apply -f deployment yaml 
+
+# Generate the yaml for the service
+kubectl expose deployment hello-world \
+     --port=80 --target-port=8080 \
+     
+# Generate the yaml for the service
+kubectl expose deployment hello-world \
+     --port=80 --target-port=8080 \
+     --dry-run=client -o yaml | more
+
+#Write the service yaml manifest to file
+kubectl expose deployment hello-world \
+     --port=80 --target-port=8080 \
+     --dry-run=client -o yaml > service.yaml
+
+# The contents of the yaml file show the definition of the Service
+more service.yaml
+
+# Create the service declaratively
+kubectl apply -f service.yaml
+
+# Check out our current state, Deployment, ReplicaSet, Pod and a Service
+kubectl get all
+
+# Scale up our deployment...in code
+vi deployment.yaml
+Change spec.replicas from 1 to 20
+     replicas: 20
+
+# Update our configuration with apply to make that code to the desired state
+kubectl apply -f deployment.yaml
+
+# And check the current configuration of our deployment...you should see 20/20
+kubectl get deployment hello-world
+kubectl get pods | more
+
+# Repeat the curl access to see the load balancing of the HTTP request
+kubectl get service hello-world
+curl http://10.102.228.210
+
+# We can edit the resources "on the fly" with kubectl edit. But this isn't reflected in your yaml.
+# But this change is persisted in the etcd...cluster store. Change 20 to 30.
+kubectl edit deployment hello-world
+
+# The deployment is scaled to 30 and we have 30 pods
+kubectl get deployment hello-world
+
+# You can also scale a deployment using scale
+kubectl scale deployment hello-world --replicas=40
+kubectl get deployment hello-world
+
+# Let's clean up our deployment and remove everything
+kubectl delete deployment hello-world
+kubectl delete service hello-world
+kubectl get all
