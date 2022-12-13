@@ -1,5 +1,5 @@
 # DISK_SIZE = '50GB'
-MEMORY = "1024"
+MEMORY = "1500"
 
 Vagrant.configure("2") do |config|
   config.vm.box = "base"
