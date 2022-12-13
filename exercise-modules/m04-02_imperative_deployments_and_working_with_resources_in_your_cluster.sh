@@ -40,3 +40,65 @@ kubectl exec -it hello-world-pod -- /bin/sh
 hostname
 ip addr
 exit
+
+# Remember that first kubectl create deployment we executed, it created a deployment for us.
+# Let's look more closely at that deployment
+# Deployments are made of ReplicaSets and ReplicaSets create Pods!
+kubectl get deployment hello-world
+kubectl get replicaset
+kubectl get pods
+
+# Let's take a closer look at our Deployent and its Pods.
+# Name, Replicas, and Events. in Events, notice how the ReplicaSet is created by the deployment.
+# Deployments are made of ReplicaSets!
+kubectl describe deployment hello-world | more
+
+# The ReplicaSet creates the Pods...check out...Name, Controlled by, Replicas, Pod Template, and Events.
+# In Events, notice how the ReplicaSet create the Pods
+kubectl describe replicaset hello-world | more
+
+# Check out the Name, Node, Status, Controlled By, IPs, Containers, and Events.
+# In Events, notice how the Pod is scheduled, the container image is pulled, and then the container is created and then started.
+kubectl describe pod hello-world-[tab][tab] | more
+
+#For a deep dive into Deployments check out 'Managing Kubernetes Controllers and Deployments'
+#https://www.pluralsight.com/courses/managing-kubernetes-controllers-deployments
+
+# Expose the Deployment as a Service. This will create a Service for the Deployment
+# We are exposing our Service on port 80 connecting to an application running on 8080 in our pod.
+# Port: Internal Cluster Port, the Service's port. You will point cluster resources here.
+# TargetPort: The Pod's Service Port, your application. That one we defined when we started the pods.
+kubectl expose deployment hello-world \
+     --port=80 \
+     --target-port=8080
+
+# Check out the CLUSTER-IP and PORT(S), that's where we'll access this service, from inside the cluster.
+kubectl get service hello-world
+
+# We can also get that information by using describe
+# Endpoints are IP:Port pairs for each of Pods that are a member of the Service.
+# Right now there is only one...later we'll increase the number of replicas and more Endpoints will be added.
+kubectl describe service hello-world
+
+# Access the Servies inside the cluster
+curl http://10.108.184.219:80
+
+# Access a single pod's application directly, useful for troubleshooting.
+kubectl get endpoints hello-world
+curl http://192.168.131.7:8080
+
+# Using kubectl to generate yaml or json for your deployents
+# This includes runtime information...which can be useful for monitoring and config management
+# but not as source manifests for declarative deployments, because it includes runtime information
+kubectl get deployment hello-world -o yaml | more
+kubectl get deployment hello-world -o json | more
+
+# Let's remove everything we created imperatively and start over using a declarative model
+# Deleting the deployment will delete the replicaset and then the pods
+# We have to delete the bare pod manually since it's not managed by a controller.
+
+kubectl get all
+kubectl delete service hello-world
+kubectl delete deployment hello-world
+kubectl delete pod hello-world-pod
+kubectl get all
