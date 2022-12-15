@@ -98,9 +98,23 @@ sudo systemctl status containerd.service
 sudo systemctl enable kubelet.service
 sudo systemctl enable containerd.service
 
+# Update the node's internal IP address
+# We do this because by default, kubectl assigns the node's first adapter (which should only be used for Vagrant to communicate with the VM) IP address as the node's internal IP, which will break some communication with the API Server.
+
+IP_ADDR=$(ifconfig eth1 | grep -i mask | awk '{print $2}'| cut -f2 -d: | sudo tee /etc/default/kubelet)
+
+echo "KUBELET_EXTRA_ARGS='--node-ip $IP_ADDR'" | sudo tee /etc/default/kubelet
+
+# Restart the kubelet to read IP address in the config file we just created
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+
 # Log out of c1-node1 and back on to c1-cp1
 exit
 vagrant ssh c1-cp1
+
+# Verify that the internal IP address of the node we are working on was successfully changed:
+kubectl get nodes -o wide
 
 # On c1-cp1 - if you didn't keep the output, on the Control Plan Node, you can get the token.
 kubeadm token list

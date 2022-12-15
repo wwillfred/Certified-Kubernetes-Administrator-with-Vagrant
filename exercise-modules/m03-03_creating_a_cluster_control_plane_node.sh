@@ -61,5 +61,18 @@ sudo more /etc/kubernetes/manifests/kube-apiserver.yaml
 # Check out the directory where the kubeconfig files live for each of the control plan pods.
 ls /etc/kubernetes
 
+# Configure kubectl to use the internal IP address that we configured for the Vagrant private network.
+# We have to do this because by default, kubelet uses the IP address of the first Ethernet adapter, which can only be used by Vagrant to ssh into the node.
+
+IP_ADDR=$(ifconfig eth1 | grep -i mask | awk '{print $2}'| cut -f2 -d: | sudo tee /etc/default/kubelet)
+echo "KUBELET_EXTRA_ARGS='--node-ip $IP_ADDR'" | sudo tee /etc/default/kubelet
+
+# Restart kubelet to read the IP address from the config file we just created.
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+
+# Verify that the Control Plane node's internal IP address was correctly configured:
+kubectl get nodes -o wide
+
 # disconnect from c1-cp1
 exit
