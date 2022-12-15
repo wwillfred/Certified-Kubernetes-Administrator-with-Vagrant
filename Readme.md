@@ -46,6 +46,6 @@ df -h /
 ```
 
 ## v. Getting started
-Step through [m03-01_installing_and_configuring_containerd.sh](exercise-modules/m03-01_installing_and_configuring_containerd.sh) to begin. 
+Step through [m03-01_installing_and_configuring_containerd.sh](exercise-modules/Kubernetes_Installation_and_Configuration_Fundamentals/m03-01_installing_and_configuring_containerd.sh) to begin. 
 
 [1]: https://unix.stackexchange.com/questions/23072/how-can-i-check-if-swap-is-active-from-the-command-line
