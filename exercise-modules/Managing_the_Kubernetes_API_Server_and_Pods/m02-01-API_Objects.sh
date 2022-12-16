@@ -66,3 +66,13 @@ kubectl apply -f deployment-generated.yaml
 # Clean up from that demo...you can use delete with -f to delete all the resources in the manifests
 kubectl delete -f deployment-generated.yaml
 
+
+# Working with kubectl diff
+# Create a deployment with 4 replicas
+kubectl apply -f /vagrant/Managing_the_Kubernetes_API_Server_and_Pods/deployment.yaml
+
+# Diff that with a deployment with 5 replicas and a new container image...you will see other metadata about the object output too.
+kubectl diff -f /vagrant/Managing_the_Kubernetes_API_Server_and_Pods/deployment-new.yaml | more
+
+# Clean up from this demo...you can use delete with -f to delete all the resources in the manifests
+kubectl delete -f deployment.yaml
