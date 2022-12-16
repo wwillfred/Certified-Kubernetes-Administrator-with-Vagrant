@@ -1,6 +1,6 @@
-# Installing and configuring Kubernetes with Vagrant
+# Preparation for the Certified Kubneretes Administrator exam with Vagrant
 
-## Issues
+## To-do's
 - [x] Add code for configuring internal ip addresses for each node
 - [ ] Debug why unable to attach a shell to a running container (m04-02*.sh)
 
