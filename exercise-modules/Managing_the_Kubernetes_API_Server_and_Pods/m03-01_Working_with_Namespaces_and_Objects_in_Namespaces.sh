@@ -54,3 +54,19 @@ kubectl get pods -n playground1
 
 # Get a list of all of the resources in our namespace...Deployment, ReplicaSet and Pods
 kubectl get all --namespace=playground1
+
+# Try to delete all the pods in our namespace...this will elete the single pod.
+# But the pods under the Deployment controller will be recreated.
+kubectl delete pods --all --namespace playground1
+
+# Get a list of all of the *new* pods in our namespace
+kubectl get pods -n playground1
+
+# Delete all of the resources in our namespace and the namespace and delete our other created namespace.
+# This deletes the Deployment controller, the Pods... or really ALL resources in the namespaces
+kubectl delete namespaces playground1
+kubectl delete namespaces playgroundinyaml
+
+# List all resources in all namespaces, now our Deployment is gone.
+kubectl get all
+kubectl get all --all-namespaces
