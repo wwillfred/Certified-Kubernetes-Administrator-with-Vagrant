@@ -69,7 +69,7 @@ kubectl describe replicaset hello-world
 kubectl get pods --show-labels
 
 # Edit the label on one of the Pods in the ReplicaSet, change the pod-template-hash
-kubectl label pod hello-world-7c649d8c6f-749nt pod-template-hash=DEBUG --overwrite
+kubectl label pod hello-world-7c649d8c6f-8z4ct pod-template-hash=DEBUG --overwrite
 
 # The ReplicaSet will deploy a new Pod to satisfy the number of replicas. Our relabeled Pod still exists.
 kubectl get pods --show-labels
@@ -89,5 +89,5 @@ kubectl get pod -o wide
 # To remove a pod from load balancing, change the label used by the service's selector.
 # The ReplicaSet will respond by placing another pod in the ReplicaSet
 kubectl get pods --show-labels
-kubectl label pod hello-world-7c649d8c6f-749nt app=DEBUG --overwrite
+kubectl label pod hello-world-7c649d8c6f-8z4ct app=DEBUG --overwrite
 
