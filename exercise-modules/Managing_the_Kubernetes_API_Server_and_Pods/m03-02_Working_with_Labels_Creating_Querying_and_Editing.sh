@@ -1,6 +1,5 @@
 # m03-02
 
-
 cd /vagrant/Managing_the_Kubernetes_API_Server_and_Pods/03_Managing_Objects_with_Labels_Annotations_and_Namespaces/
 
 # Create a collection of pods with labels assigned to each
