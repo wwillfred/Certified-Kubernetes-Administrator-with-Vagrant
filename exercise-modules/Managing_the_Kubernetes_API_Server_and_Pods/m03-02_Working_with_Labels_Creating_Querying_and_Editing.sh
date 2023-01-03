@@ -101,3 +101,29 @@ kubectl describe endpoints hello-world
 kubectl delete deployment hello-world
 kubectl delete service hello-world
 kubectl delete pod hello-world-7c649d8c6f-5vn72
+
+# Scheduling a pod to a node
+# Scheduling is a much deeper topic, we're focusing on how labels can be used to influence it here.
+kubectl get nodes --show-labels
+
+# Label our nodes with something descriptive
+kubectl label node c1-node2 disk=local_ssd
+kubectl label node c1-node3 hardware=local_gpu
+
+# Query our labels to confirm.
+kubectl get node -L disk,hardware
+
+# Create three Pods, two using nodeSelector, one without.
+more PodsToNodes.yaml
+kubectl apply -f PodsToNodes.yaml
+
+# View the scheduling of the pods in the cluster.
+kubectl get node -L disk,hardware
+kubectl get pods -o wide
+
+# Clean up when we're finished, delete our labels and Pods
+kubectl label node c1-node2 disk-
+kubectl label node c1-node3 hardware-
+kubectl delete pod nginx-pod
+kubectl delete pod nginx-pod-gpu
+kubectl delete pod nginx-pod-ssd
