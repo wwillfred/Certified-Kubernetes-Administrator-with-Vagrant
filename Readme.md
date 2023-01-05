@@ -5,9 +5,12 @@ This repository contains step-by-step instructions for completing the exercises 
 
 For a repository that automates the installation and configuration of a similar Kubernetes cluster with Vagrant, check out [this repo](https://github.com/techiescamp/vagrant-kubeadm-kubernetes).
 
+### Issues
+* Several modules in the course [Managing the Kubernetes API Server and Pods](https://www.pluralsight.com/courses/managing-kubernetes-api-server-pods) require you to attach a shell to an instance of the gcr.io/google-samples/hello-app:1.0 container, which seems to not be possible with the current version of this container. I've posted a [question on Ask Ubuntu](https://askubuntu.com/questions/1448795/why-can-i-not-attach-a-shell-to-googles-hello-appv1-container) on this problem and have reached out to the instructor on this course to suggest an alternative container.
+
 ## Progress by course
 - [x] Kubernetes Installation and Configuration Fundamentals
-- [ ] Managing the Kubernetes API Server and Pods - *in progress*
+- [X] Managing the Kubernetes API Server and Pods
 - [ ] Managing Kubernetes Controllers and Deployments
 - [ ] Configuring and Managing Kubernetes Storage and Scheduling
 - [ ] Configuring and Managing Kubernetes Networking, Services, and Ingress
@@ -53,10 +56,5 @@ df -h /
 
 ### v. Getting started
 Step through [m03-01_installing_and_configuring_containerd.sh](exercise-modules/Kubernetes_Installation_and_Configuration_Fundamentals/m03-01_installing_and_configuring_containerd.sh) to begin. 
-
-
-## To-do's
-- [x] Add code for configuring internal ip addresses for each node
-- [ ] Debug why unable to attach a shell to a running container (m04-02*.sh)
 
 [1]: https://unix.stackexchange.com/questions/23072/how-can-i-check-if-swap-is-active-from-the-command-line
