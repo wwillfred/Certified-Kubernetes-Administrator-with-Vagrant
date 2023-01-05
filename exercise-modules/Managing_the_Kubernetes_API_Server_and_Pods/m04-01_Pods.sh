@@ -46,5 +46,46 @@ ctrl+c
 kubectl delete deployment hello-world
 kubectl delete pod hello-world-pod
 
+# Kill off the kubectl get events
 fg
 ctrl+c
+
+# Static pods
+# Quickly create a Pod manifest using kubectl run with dry-run and -o yaml...copy that into your clipboard
+kubectl run hello-world --image=gcr.io/google-samples/hello-app:2.0 --dry-run=client -o yaml --port=8080
+
+# Log into a node...
+exit
+vagrant ssh c1-node1
+
+# Find the staticPodPath:
+sudo cat /var/lib/kubelet/config.yaml
+
+# Create a Pod manifest in the staticPodPath...paste in the manifest we created above
+sudo vi /etc/kubernetes/manifests/mypod.yaml
+ls /etc/kubernetes/manifests
+
+# Log out of c1-node1 and back onto c1-cp1
+exit
+vagrant ssh c1-cp1
+
+# Get a listing of pods...the pods name is podname + node name
+kubectl get pods -o wide
+
+# Try to delete the pod...
+kubectl delete pod hello-world-c1-node1
+
+# It's still there...
+kubectl get pods
+
+# Remove the static pod manifest on the node
+exit
+vagrant ssh c1-node1
+sudo rm /etc/kubernetes/manifests/mypod.yaml
+
+# Log out of c1-node1 and back onto c1-cp1
+exit
+vagrant ssh c1-cp1
+
+# The pod is now gone.
+kubectl get pods
