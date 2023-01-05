@@ -52,3 +52,23 @@ clear
 
 # Create our deployment with faulty startup probe...
 # You'll see failures since the startup probe is looking for 8081...
+# but you won't see the liveness or readiness probes executed
+# The container will be restarted after 1 failures failureThreashold defaults to 3...this can take up to 30 seconds.
+# The container restart policy default is Always...so it will restart.
+more container-probes-startup.yaml
+kubectl apply -f container-probes-startup.yaml
+
+# Do you see any container restarts? You should see 1.
+kubectl get pods
+
+# Change the startup probe from 8081 to 8080
+vi container-probes-startup.yaml
+kubectl apply -f container-probes-startup.yaml
+
+# Our pod should be up and Ready now.
+kubectl get pods
+
+fg
+ctrl+c
+
+kubectl delete -f container-probes-startup.yaml
