@@ -26,7 +26,9 @@ exit
 
 # Let's look at the running container-pod from the process level on a Node.
 kubectl get pods -o wide
-ssh aen@c1-node1 # need to find out why this doesn't work
+
+exit
+vagrant ssh c1-node1
 ps -aux | grep hello-app
 exit
 
