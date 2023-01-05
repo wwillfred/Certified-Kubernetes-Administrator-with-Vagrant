@@ -6,7 +6,7 @@ This repository contains step-by-step instructions for completing the exercises 
 For a repository that automates the installation and configuration of a similar Kubernetes cluster with Vagrant, check out [this repo](https://github.com/techiescamp/vagrant-kubeadm-kubernetes).
 
 ### Issues
-* Several modules in the course [Managing the Kubernetes API Server and Pods](https://www.pluralsight.com/courses/managing-kubernetes-api-server-pods) require you to attach a shell to an instance of the gcr.io/google-samples/hello-app:1.0 container, which seems to not be possible with the current version of this container. I've posted a [question on Ask Ubuntu](https://askubuntu.com/questions/1448795/why-can-i-not-attach-a-shell-to-googles-hello-appv1-container) on this problem and have reached out to the instructor on this course to suggest an alternative container.
+* Several modules in the course [Managing the Kubernetes API Server and Pods](https://www.pluralsight.com/courses/managing-kubernetes-api-server-pods) require you to attach a shell to an instance of the `gcr.io/google-samples/hello-app:1.0` container, which seems to not be possible with the current version of this container. I've posted a [question on Ask Ubuntu](https://askubuntu.com/questions/1448795/why-can-i-not-attach-a-shell-to-googles-hello-appv1-container) on this problem and have reached out to the instructor on this course to suggest an alternative container.
 
 ## Progress by course
 - [x] Kubernetes Installation and Configuration Fundamentals
