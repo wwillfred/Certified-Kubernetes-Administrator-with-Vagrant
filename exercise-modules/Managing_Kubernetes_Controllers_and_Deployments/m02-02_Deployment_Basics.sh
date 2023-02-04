@@ -22,4 +22,29 @@ kubectl delete deployment hello-world
 # Let's start off declaratively creating a deployment with a service
 kubectl apply -f deployment.yaml
 
-#  
+# Check out the status of our deployment, which creates the ReplicaSet, which creates our Pods
+kubectl get deployments hello-world
+
+# The first ReplicaSet created in our deployment, which has the responsibility
+# of maintaining the desired state of our application but starting and keeping 5 pods online.
+# In the name of the ReplicaSet is the pod-template-hash
+kubectl get replicasets  
+
+# The actual pods as part of this ReplicaSet, we know these pods belong to the
+# replicaset because of the pod-template-hash in the name
+kubectl get pods
+
+# But also by looking at the 'Controlled By' property
+kubectl describe pods | head -n 15
+
+# It's the job of the deployment-controller to maintain state. 
+# Let's look at it a little closer
+# The selector defines which pods are a member of this deployment.
+# Replicas define the current state of the deployment
+# We'll dive into what each one of these means later in the course.
+# In Events, you can see the creation and scaling of the replica set to 5
+kubectl describe deployment
+
+# Remove our resources
+kubectl delete deployment hello-world
+kubectl delete service hello-world
