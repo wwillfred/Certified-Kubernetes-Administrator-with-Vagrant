@@ -83,3 +83,40 @@ kubectl get jobs
 
 # Let's clean up...
 kubectl delete job hello-world-job-parallel
+
+
+
+
+# Deo 5 - Scheduling tasks with CronJobs
+kubectl apply -f CronJob.yaml
+
+
+# Quick overview of the job and its schedule
+kubectl get cronjobs
+
+
+
+# But let's look closer...schedule, Concurrency, Suspend, Starting Deadline
+# Seconds, events...there's execution history
+kubectl describe cronjobs | more
+
+
+# Get an overview again...
+kubectl get cronjobs
+
+
+# The pods will stick around, in the event we need their logs or other
+# information. How long?
+kubectl get pods --watch
+
+
+# They will stick around for successfulJobsHistoryLimit, which defaults to three
+kubectl get cronjobs -o yaml
+
+
+# Clean up the job...
+kubectl delete cronjob hello-world-cron
+
+
+# Deletes all the Pods too...
+kubectl get pods
