@@ -24,8 +24,8 @@ kubectl describe job hello-world-job
 
 
 # Get the logs from stdout from the Job Pod
-kubectl get pods -l job-name=hello-world-job
-kubectl logs PASTE_POD_NAME_HERE
+MYPOD=$(kubectl get pods -l job-name=hello-world-job | grep hello-world-job | head -n 1 | awk {'print $1'})
+kubectl logs $MYPOD
 
 
 # Our Job is completed, but it's up to us to delete the Pod or the Job.
@@ -64,4 +64,22 @@ kubectl get pods
 
 
 
-# Demo 3 -
+# Demo 3 - Defining a Parallel Job
+kubectl apply -f ParallelJob.yaml
+
+
+$ 10 Pods will run in parallel up until 50 completions
+kubectl get pods
+
+
+
+# We can 'watch' the Statuses with watch
+watch 'kubectl describe job | head -n 11'
+
+
+# We'll get to 50 completions very quickly
+kubectl get jobs
+
+
+# Let's clean up...
+kubectl delete job hello-world-job-parallel
