@@ -1,7 +1,7 @@
 m03_02 Deployments, Part II
 
 vagrant ssh c1-cp1
-cd /vagrant/Managing_Kubernetes_Controllers_and_Deployments/03
+cd /vagrant/declarative-config-files/Managing_Kubernetes_Controllers_and_Deployments/03
 
 # Demo 2.1 - Updating to a non-existent image
 # Delete any current deployments, because we're interested in the deploy state

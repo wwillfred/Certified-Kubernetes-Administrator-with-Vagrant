@@ -1,6 +1,7 @@
 # m02-02
 
 vagrant ssh c1-cp1
+cd /vagrant/declarative-config-files/Managing_the_Kubernetes_API_Server_and_Pods/02-Using_the_Kubernetes_API 
 
 # Let's ask the API Server for the API Resources it knows about.
 kubectl api-resources | more

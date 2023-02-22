@@ -1,7 +1,7 @@
 # m04-04: Probes
 
 vagrant ssh c1-cp1
-cd /vagrant/Managing_the_Kubernetes_API_Server_and_Pods/04_Running_and_Managing_Pods
+cd /vagrant/declarative-config-files/Managing_the_Kubernetes_API_Server_and_Pods/04_Running_and_Managing_Pods
 
 # Start a watch to see the events associated with our probes.
 kubectl get events --watch &

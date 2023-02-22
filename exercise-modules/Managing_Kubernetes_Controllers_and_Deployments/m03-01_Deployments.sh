@@ -1,7 +1,7 @@
 m03-01: Deployments
 
 vagrant ssh c1-cp1
-cd /vagrant/Managing_Kubernetes_Controllers_and_Deployments/03
+cd /vagrant/declarative-config-files/Managing_Kubernetes_Controllers_and_Deployments/03
 
 # Demo 1 - Updating a Deployment and checking our rollout status
 # Let's start off with rolling out v1

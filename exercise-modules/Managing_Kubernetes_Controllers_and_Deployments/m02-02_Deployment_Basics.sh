@@ -1,7 +1,7 @@
 m02-02: Deployment Basics
 
 ssh c1-cp1
-cd /vagrant/Managing_Kubernetes_Controllers_and_Deployments/02
+cd /vagrant/declarative-config-files/Managing_Kubernetes_Controllers_and_Deployments/02
 
 # Demo 2 Creating Deployment Imperatively, with kubectl create,
 # you have lots of options available to you such as image, container ports, and replicas

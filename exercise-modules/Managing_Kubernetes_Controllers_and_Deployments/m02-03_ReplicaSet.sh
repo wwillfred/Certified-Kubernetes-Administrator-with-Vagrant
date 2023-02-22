@@ -1,7 +1,7 @@
 m02-03 ReplicaSet
 
 vagrant ssh c1-cp1
-cd /vagrant/Managing_Kubernetes_Controllers_and_Deployments/02
+cd /vagrant/declarative-config-filesdeclarative-config-files//Managing_Kubernetes_Controllers_and_Deployments/02
 
 # Demo 1 - Deploy a Deployment which creates a ReplicaSet
 kubectl apply -f deployment.yaml

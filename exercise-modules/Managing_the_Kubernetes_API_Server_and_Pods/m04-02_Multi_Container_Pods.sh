@@ -1,7 +1,7 @@
 # m04-02: Multi-Container Pods
 
 vagrant ssh c1-cp1
-cd /vagrant/Managing_the_Kubernetes_API_Server_and_Pods/04_Running_and_Managing_Pods
+cd /vagrant/declarative-config-files/Managing_the_Kubernetes_API_Server_and_Pods/04_Running_and_Managing_Pods
 
 # Review the code for a multi-container pod, the volume webcontent is an eptyDir...essentially a temporary file system.
 # This is mounted in the containers at mountPath, in two different locations inside the container.

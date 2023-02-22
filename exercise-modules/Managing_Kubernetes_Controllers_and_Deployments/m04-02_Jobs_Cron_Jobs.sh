@@ -1,7 +1,7 @@
 m04-02 - Jobs Cron Jobs
 
 vagrant ssh c1-cp1
-cd /vagrant/Managing_Kubernetes_Controllers_and_Deployments/04
+cd /vagrant/declarative-config-files/Managing_Kubernetes_Controllers_and_Deployments/04
 
 # Demo 1 - Executing tasks with Jobs, check out the file job.yaml
 # Ensure you define a restartPolicy, the default of a Pod is Always, which is not compatible

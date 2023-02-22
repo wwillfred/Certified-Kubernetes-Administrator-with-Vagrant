@@ -1,6 +1,7 @@
 # m04-01: Pods
 
-cd /vagrant/Managing_the_Kubernetes_API_Server_and_Pods/04_Running_and_Managing_Pods
+vagrant ssh c1-cp1
+cd /vagrant/declarative-config-files/Managing_the_Kubernetes_API_Server_and_Pods/04_Running_and_Managing_Pods
 
 # Start up kubectl get events --watch and background it.
 kubectl get events --watch &

@@ -1,9 +1,12 @@
 # m02-03
 
+vagrant ssh c1-cp1
+cd /vagrant/declarative-config-files/Managing_the_Kubernetes_API_Server_and_Pods/02-Using_the_Kubernetes_API
+
 # Anatomy of an API Request
 
 #Creating a pod with YAML
-kubectl apply -f /vagrant/Managing_the_Kubernetes_API_Server_and_Pods/02-Using_the_Kubernetes_API/pod.yaml
+kubectl apply -f pod.yaml
 
 # Get a list of our currently running Pods
 kubectl get pod hello-world
@@ -40,7 +43,7 @@ netstat -plant | grep kubectl
 kubectl delete pods hello-world
 
 # But let's bring our Pod back...because we have more demos.
-kubectl apply -f /vagrant/Managing_the_Kubernetes_API_Server_and_Pods/02-Using_the_Kubernetes_API/pod.yaml
+kubectl apply -f pod.yaml
 
 # And kill off our watch
 fg
@@ -80,7 +83,7 @@ kubectl get pods nginx-pod -v 6
 
 # Let's look at creating and deleting a deployment.
 # We see a query for the existence of the deployment which results in a 404, then a 201 OK on the POST to create the deployment which succeeds.
-kubectl apply -f /vagrant/Managing_the_Kubernetes_API_Server_and_Pods/02-Using_the_Kubernetes_API/deployment.yaml -v 6
+kubectl apply -f deployment.yaml -v 6
 
 # Get a list of the Deployments
 kubectl get deployment

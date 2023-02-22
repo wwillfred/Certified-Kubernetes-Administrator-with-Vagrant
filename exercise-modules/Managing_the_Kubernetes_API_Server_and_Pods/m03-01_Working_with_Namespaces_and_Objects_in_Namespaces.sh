@@ -1,5 +1,8 @@
 # m03-01
 
+vagrant ssh c1-cp1
+cd /vagrant/declarative-config-files/Managing_the_Kubernetes_API_Server_and_Pods/03_Managing_Objects_with_Labels_Annotations_and_Namespaces
+
 # Get a list of all the namespaces in our cluster
 kubectl get namespaces
 
@@ -30,15 +33,15 @@ kubectl create namespace playground1
 kubectl create namespace Playground1
 
 # Declaratively create a namespace
-more /vagrant/Managing_the_Kubernetes_API_Server_and_Pods/03_Managing_Objects_with_Labels_Annotations_and_Namespaces/namespace.yaml
-kubectl apply -f /vagrant/Managing_the_Kubernetes_API_Server_and_Pods/03_Managing_Objects_with_Labels_Annotations_and_Namespaces/namespace.yaml
+more namespace.yaml
+kubectl apply -f namespace.yaml
 
 # Get a list of all the current namespaces
 kubectl get namespaces
 
 # Start a deployment into our playground1 namespace
-more /vagrant/Managing_the_Kubernetes_API_Server_and_Pods/03_Managing_Objects_with_Labels_Annotations_and_Namespaces/deployment.yaml
-kubectl apply -f /vagrant/Managing_the_Kubernetes_API_Server_and_Pods/03_Managing_Objects_with_Labels_Annotations_and_Namespaces/deployment.yaml
+more deployment.yaml
+kubectl apply -f deployment.yaml
 
 # Creating a resource imperatively...the generator parameter is deprecated and removed from the demo.
 kubectl run hello-world-pod \

@@ -1,7 +1,7 @@
 m03-03: Deployments, part III
 
 vagrant ssh c1-cp1
-cd /vagrant/Managing_Kubernetes_Controllers_and_Deployments/03
+cd /vagrant/declarative-config-files/Managing_Kubernetes_Controllers_and_Deployments/03
 
 # Demo 1 - Creating and Scaling a Deployment.
 # Let's start off imperatively creating a deployment and scaling it...

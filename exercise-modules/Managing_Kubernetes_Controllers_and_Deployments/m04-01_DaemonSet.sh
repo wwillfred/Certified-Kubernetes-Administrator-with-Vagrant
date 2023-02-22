@@ -1,7 +1,7 @@
 m04-01 - DaemonSets
 
 vagrant ssh c1-cp1
-cd /vagrant/Managing_Kubernetes_Controllers_and_Deployments/04
+cd /vagrant/declarative-config-files/Managing_Kubernetes_Controllers_and_Deployments/04
 
 # Demo 1 - Creating a DaemonSet on All Nodes
 # We get one Pod per Node to run network services on that Node

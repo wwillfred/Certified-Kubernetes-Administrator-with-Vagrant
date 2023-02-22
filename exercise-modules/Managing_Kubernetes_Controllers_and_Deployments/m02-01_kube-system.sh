@@ -1,7 +1,7 @@
 # m02-01 kube-system
 
 vagrant ssh c1-cp1
-cd /vagrant/Managing_Kubernetes_Controllers_and_Deployments/02
+cd /vagrant/declarative-config-files/Managing_Kubernetes_Controllers_and_Deployments/02
 
 # Demo 1 - Examining System Pods and their Controllers
 
