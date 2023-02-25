@@ -22,6 +22,7 @@ exit
 sudo apt install nfs-common -y
 
 # On one of the Nodes, test out basic NFS access before moving on.
+# NOT SURE WHAT THESE COMMANDS ARE SUPPOSED TO DO, BUT REST OF DEMO WORKS
 vagrant ssh c1-node1
 sudo mount -t nfs4 c1-storage:/export/volumes /mnt/
 mount | grep nfs
@@ -73,3 +74,36 @@ kubectl get pods
 
 # Let's access that application to see our application data...
 curl http://$SERVICEIP/web-app/demo.html
+
+# Check the Mounted By output for which Pod(s) are accessing this storage
+kubectl describe PersistentVolumeClaim pvc-nfs-data
+
+# If we go 'inside' the Pod/Container, let's look at where the PV is mounted
+kubectl exec -it nginx-nfs-deployment-[tab][tab] -- /bin/bash
+ls /usr/share/nginx/html/web-app
+more /usr/share/nginx/html/web-app/demo.html
+exit
+
+# What node is this pod on?
+kubectl get pods -o wide
+
+# Let's log into that node and look at the mounted volume...it's the kubelet's job to
+# make the device/mount available.
+exit
+vagrant ssh c1-node[X]
+mount | grep nfs
+exit
+
+# Let's delete the pod and see if we still have access to our data in our PV...
+vagrant ssh c1-cp1
+kubectl get pods
+kubectl delete pods nginx-nfs-deployment-[tab][tab]
+
+#We get a new pod...but is our app data still there???
+kubectl get pods
+
+# Let's access that application to see our application data...yes!
+SERVICEIP=$(kubectl get service | grep nginx-nfs-service | awk '{ print $3 }')
+curl http://$SERVICEIP/web-app/demo.html
+
+
