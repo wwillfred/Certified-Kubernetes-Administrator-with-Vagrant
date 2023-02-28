@@ -107,3 +107,75 @@ SERVICEIP=$(kubectl get service | grep nginx-nfs-service | awk '{ print $3 }')
 curl http://$SERVICEIP/web-app/demo.html
 
 
+# Demo 2 - Controlling PV access with Access Modes and 
+# persistentVolumeReclaimPolicy
+# Scale up the deployment to 4 replicas
+kubectl scale deployment nginx-nfs-deployment --replicas=4
+
+# Now let's look at who's attached to the PVC, all 4 Pods
+# Our AccessMode for this PV and PVC is RWX ReadWriteMany
+kubectl describe PersistentVolumeClaim
+
+# Now when we access our application we're getting load balanced across all the
+# pods hitting the same PV data
+curl http://$SERVICEIP/web-app/demo.html
+
+# Let's delete our deployment
+kubectl delete deployment nginx-nfs-deployment
+
+# Check status, still bound on the PV...why is that...
+kubectl get PersistentVolume
+
+# Because the PVC still exists...
+kubectl get PersistentVolumeClaim
+
+# Can re-use the same PVC and PV from a Pod definition...yes! Because we didn't
+# delete the PVC.
+kubectl apply -f nfs.nginx.yaml
+
+# Our app is up and running
+kubectl get pods
+
+# But if I delete the deployment
+kubectl delete deployment nginx-nfs-deployment
+
+# AND I delete the PersistentVolumeClaim
+kubectl delete PersistentVolumeClaim pvc-nfs-data
+
+# My status is now Released...which means no one can claim this PV
+kubectl get PersistentVolume
+
+# But let's try to use it and see what happens, recreate the PVC for this PV
+kubectl apply -f nfs.pvc.yaml
+
+# Then try to use the PVC/PV in a Pod definition
+kubectl apply -f nfs.nginx.yaml
+
+# The Pod creation is Pending
+kubectl get pods
+
+# As is my PVC Status...Pending...because that PV is Released and our Reclaim Policy is
+# Retain
+kubectl get PersistentVolumeClaim
+kubectl get PersistentVolume
+
+# Need to delete the PV if we want to 'reuse' that exact PV...to 're-create' the PV
+kubectl delete deployment nginx-nfs-deployment
+kubectl delete pvc pvc-nfs-data
+kubectl delete pv pv-nfs-data
+
+# If we recreate the PV, PVC, and the pods, we'll be able to re-deploy.
+# The clean up of the data is defined by the reclaim policy. (Delete will clean up for
+# you, useful in dynamic provisioning scenarios)
+# But in this case, since it's NFS, we have to clean it up and remove the files
+# Nothing will prevent a user from getting access to these data, so it's imperative
+# to clean up.
+kubectl apply -f nfs.pv.yaml
+kubectl apply -f nfs.pvc.yaml
+kubectl apply -f nfs.nginx.yaml
+kubectl get pods
+
+# Time to clean up for the next demo
+kubectl delete -f nfs.nginx.yaml
+kubectl delete pvc pvc-nfs-data
+kubectl delete pv pv-nfs-data
