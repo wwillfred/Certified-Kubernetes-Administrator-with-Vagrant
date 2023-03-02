@@ -16,6 +16,35 @@ curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor | sud
 sudo apt-get update
 sudo apt-get install azure-cli
 
+# Log into our subscription
+az login
+az account set --subscription "Demonstration Account"
+
+# Create a resource group for the services we're going to create
+az group create --name "Kubernetes-Cloud" --location centralus
+
+# Let's get a list of the versions available to us
+az aks get-versions --location centralus -o table
+
+# Let's check out some of the options available to us when creating our managed cluster
+az aks create -h | more
+
+# Let's create our AKS managed cluster.
+az aks create \
+  --resource-group "Kubernetes-Cloud" \
+  --generate-ssh-keys \
+  --name CSCluster \
+  --node-count 3 # default Node count is 3
+
+# Get our cluster credentials and merge the configuration into our existing config file
+# This will allow us to connect to this system remotely using certificate-based user
+# authentication.
+az aks get-credentials --resource-group "Kubernetes-Cloud" --name CSCluster
+
+# List our currently available contexts
+kubectl config get-contexts
+
+
 cd /vagrant/declarative-config-files/Configuring_and_Managing_Kubernetes_Storage_and_Scheduling/02_Configuring_and_Managing_Storage_in_Kubernetes
 
 # Demo 1 - 
