@@ -14,9 +14,9 @@ spec:
     spec:
       containers:
       - name: hello-world
-        image: gcr.io/google-samples/hello-app:1.0
+        image: nginx
         env:
-        - name: DATABASE_SERVERNAME
+        - name: DATABASE_SERVERNAME        
           value: "sql.example.local"
         - name: BACKEND_SERVERNAME
           value: "be.example.local"
