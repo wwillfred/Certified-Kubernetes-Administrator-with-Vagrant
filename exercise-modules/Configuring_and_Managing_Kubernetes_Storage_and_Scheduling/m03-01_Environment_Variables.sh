@@ -7,7 +7,7 @@ cd /vagrant/declarative-config-files/Configuring_and_Managing_Kubernetes_Storage
 # Create two deployments, one for a database system and the other for our application.
 # We're putting a little wait in there so the Pods are created one after the other.
 kubectl apply -f deployment-alpha.yaml
-sleep 10
+sleep 5
 kubectl apply -f deployment-beta.yaml
 
 # Let's look at the services
@@ -32,3 +32,13 @@ kubectl delete pod $PODNAME
 #   Pod/Container startup.
 PODNAME=$(kubectl get pods | grep hello-world-alpha | awk '{print $1}' | head -n 1)
 kubectl exec -it $PODNAME -- /bin/sh -c "printenv | sort"
+
+# If we delete our service and deployment
+kubectl delete deployment hello-world-beta
+kubectl delete service hello-world-beta
+
+# The environment variables stick around...to get a new set, the Pod needs to be recreated.
+kubectl exec -it $PODNAME -- /bin/sh -c "printenv | sort"
+
+# Let's clean up after our demo
+kubectl delete -f deployment-alpha.yaml
