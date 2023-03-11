@@ -68,3 +68,42 @@ exit
 kubectl delete secret app1
 kubectl delete deployment hello-world-secrets-env
 kubectl delete deployment hello-world-secrets-files
+
+
+# Additional examples of using secrets in your Pods
+# I'll leave this up to you to work with...
+# Create a secret using clear text and the stringData field
+
+cd /vagrant/declarative-config-files/Configuring_and_Managing_Kubernetes_Storage_and_Scheduling/03_Configuration_as_Data_Environment_Variables_Secrets_and_ConfigMaps
+
+kubectl apply -f secret.string.yaml
+
+# Create a secret with encoded values, preferred over clear text.
+echo -n 'app2login' | base64
+echo -n 'S0methingS@Str0ng!' | base64
+kubectl apply -f secret.encoded.yaml
+
+# Check out the list of secrets now available
+kubectl get secrets
+
+# Examine how each object is stored, look at the annotations for the app2 secret.
+kubectl get secrets app2 -o yaml
+kubectl get secrets app3 -o yaml
+
+# There's also an envForm example in here for you too...
+kubectl create secret generic app1 --from-literal=USERNAME=app1login --from-literal=PASSWORD='S0methingS@Str0ng!'
+
+# Create the deployment, envFrom will create environment variables for each key in the
+#   named secret app1 with and set its value set to the secrets value
+kubectl apply -f deployment-secrets-env-from.yaml
+
+PODNAME=$(kubectl get pods | grep hello-world-secrets-env-from | awk '{print $1}' | head -n 1)
+echo $PODNAME
+kubectl exec -it $PODNAME -- /bin/sh
+printenv | sort
+exit
+
+kubectl delete secret app1
+kubectl delete secret app2
+kubectl delete secret app3
+kubectl delete deployment hello-world-secrets-env-from
