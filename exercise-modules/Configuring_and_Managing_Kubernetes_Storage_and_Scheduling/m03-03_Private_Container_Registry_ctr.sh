@@ -34,3 +34,30 @@ kubectl create secret docker-registry private-reg-cred \
     --docker-username=$USERNAME \
     --docker-password=$PASSWORD \
     --docker-email=$EMAIL
+
+# Ensure the image doesn't exist on any of our nodes...or else we can get a false positive
+#   since our image would be cached on the node.
+# Caution, this will delete *ANY* image that begins with hello-app
+exit
+vagrant ssh c1-node1
+sudo ctr --namespace k8s.io image ls "name~=hello-app" -q | sudo xargs ctr --namespace k8s.io image rm
+exit
+vagrant ssh c1-node2
+sudo ctr --namespace k8s.io image ls "name~=hello-app" -q | sudo xargs ctr --namespace k8s.io image rm
+exit
+vagrant ssh c1-node3
+sudo ctr --namespace k8s.io image ls "name~=hello-app" -q | sudo xargs ctr --namespace k8s.io image rm
+exit
+
+# Create a deployment using imagePullSecret in the Pod Spec.
+kubectl apply -f deployment-private-registry.yaml
+
+# Check out Containers and events section to ensure the container was actually pulled.
+# This is why I made sure they were deleted from each Node above.
+kubectl describe pods hello-world
+
+# Clean up after our demo, remove the images from c1-cp1
+kubectl delete -f deployment-private-registry.yaml
+kubectl delete secret private-reg-cred
+sudo ctr images remove docker.io/{username}/{registry}:{tag}
+sudo ctr images remove gcr.io/google-samples/hello-app:1.0
