@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: hello-world
-        image: nocentino/hello-app:ps
+        image: wwillfred/cka:ps
         ports:
           - containerPort: 8080
       imagePullSecrets:
