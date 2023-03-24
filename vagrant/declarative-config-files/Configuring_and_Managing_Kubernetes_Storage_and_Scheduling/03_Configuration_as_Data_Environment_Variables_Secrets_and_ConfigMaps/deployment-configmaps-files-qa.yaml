@@ -18,7 +18,7 @@ spec:
             name: appconfigqa
       containers:
       - name: hello-world
-        image: gcr.io/google-samples/hello-app:1.0
+        image: nginx
         ports:
         - containerPort: 8080
         volumeMounts:
