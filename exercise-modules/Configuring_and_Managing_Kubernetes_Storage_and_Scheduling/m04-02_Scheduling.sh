@@ -64,3 +64,31 @@ kubectl get pods -o wide --selector app=hello-world-web
 
 # Let's clean up the resources from this demo
 kubectl delete -f deployment-antiaffinity-corrected.yaml
+
+
+# Demo 2 - Controlling Pod placement with Taints and Tolerations
+# Let's add a Taint to c1-node1
+kubectl taint nodes c1-node1 key=MyTaint:NoSchedule
+
+# We can see the taint at the node level, look at the Taints section
+kubectl describe node c1-node1
+
+# Let's create a deployment with three replicas
+kubectl apply -f deployment.yaml
+
+# We can see Pods get placed on the non-tainted nodes
+kubectl get pods -o wide
+
+# But if we add a deployment with a Toleration...
+kubectl apply -f deployment-tolerations.yaml
+
+# We can see Pods get placed on the non-tainted nodes
+kubectl get pods -o wide
+
+# Remove our Taint
+kubectl taint nodes c1-node1 key:NoSchedule-
+
+# Clean up after our demo
+kubectl delete -f deployment-tolerations.yaml
+kubectl delete -f deployment.yaml
+
