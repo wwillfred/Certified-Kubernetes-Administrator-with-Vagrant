@@ -92,3 +92,45 @@ kubectl taint nodes c1-node1 key:NoSchedule-
 kubectl delete -f deployment-tolerations.yaml
 kubectl delete -f deployment.yaml
 
+
+# Demo - Using Labels to Schedule Pods to Nodes
+# From:
+#   Course: Managing the Kubernetes API Server and Pods
+#   Module: Managing Objects with Labels, Annotations, and Namespaces
+#   Clip:   Demo: Services, Labels, Selectors, and Scheduling Pods to Nodes
+
+# Scheduling a Pod to a Node
+kubectl get nodes --show-labels
+
+# Label our nodes with something descriptive
+kubectl label node c1-node2 disk=local_ssd
+kubectl label node c1-node3 hardware=local_gpu
+
+# Query our labels to confirm
+kubectl get node -L disk,hardware
+
+# Create three Pods, two using nodeSelector, one without
+kubectl apply -f DeploymentsToNodes.yaml
+
+# View the scheduling of the Pods in the cluster
+kubectl get node -L disk,hardware
+kubectl get pods -o wide
+
+# If we scale this deployment, all new Pods will go onto the Node with the GPU label
+kubectl scale deployment hello-world-gpu --replicas=3
+kubectl get pods -o wide
+
+# If we scale this Deployment, all new Pods will onto the Node with the SSD label
+kubectl scale deployment hello-world-ssd --replicas=3
+kubectl get pods -o wide
+
+# If we go beyond that...it will use all Nodes to keep load even globally
+kubectl scale deployment hello-world --replicas=10
+kubectl get pods -o wide
+
+# Clean up when we're finished, delete our labels and Pods
+kubectl label node c1-node2 disk-
+kubectl label node c1-node3 hardware-
+kubectl delete deployments.apps hello-world
+kubectl delete deployments.apps hello-world-gpu
+kubectl delete deployments.apps hello-world-ssd
