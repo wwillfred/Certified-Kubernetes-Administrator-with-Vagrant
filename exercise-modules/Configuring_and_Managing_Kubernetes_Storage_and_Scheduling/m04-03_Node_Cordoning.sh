@@ -44,3 +44,34 @@ kubectl get pods -o wide
 
 # Clean up this demo...
 kubectl delete deployment hello-world
+
+
+# Demo 2 - Manually scheduling a Pod by specifying nodeName
+kubectl apply -f pod.yaml
+
+# Our Pod should be on c1-node3
+kubectl get pods -o wide
+
+# Let's delete our Pod, since there's no controller it won't get recreated :(
+kubectl delete pod hello-world-pod
+
+# Now let's cordon node3 again
+kubectl cordon c1-node3
+
+# And try to recreate our Pod
+kubectl apply -f pod.yaml
+
+# You can still place a Pod on the node since the Pod isn't getting "scheduled", status is
+#   SchedulingDisabled
+kubectl get pod -o wide
+
+# Can't remove the unmanaged Pod either since it's not managed by a Controller and won't
+#   get restarted
+kubectl drain c1-node3 --ignore-daemonsets
+
+# Let's clean up our demo, delete our Pod and uncordon the Node
+kubectl delete pod hello-world-pod
+
+# Now let's uncordon node3 so it's able to have Pods scheduled to it
+# I forgot to do this in the video demo :)
+kubectl uncordon c1-node3
