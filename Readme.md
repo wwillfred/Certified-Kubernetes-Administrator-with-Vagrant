@@ -1,24 +1,26 @@
 # Preparation for the Certified Kubneretes Administrator exam with Vagrant
 
 ## Overview
-This repository contains step-by-step instructions for completing the exercises in the Pluralsight path [Certified Kubernetes Administrator (CKA)](https://app.pluralsight.com/paths/certificate/certified-kubernetes-administrator). A unique feature of this repository is that it includes code for implementing the courses' exercises with Vagrant virtual machines running Ubuntu 18.04. 
+This repository contains step-by-step instructions for completing the exercises in the Pluralsight path [Certified Kubernetes Administrator (CKA)](https://app.pluralsight.com/paths/certificate/certified-kubernetes-administrator). A unique feature of this repository is that it includes code for implementing the courses' exercises with Vagrant virtual machines. 
 
 For a repository that automates the installation and configuration of a similar Kubernetes cluster with Vagrant, check out [this repo](https://github.com/techiescamp/vagrant-kubeadm-kubernetes).
 
-### Issues
-* Several modules in the course [Managing the Kubernetes API Server and Pods](https://www.pluralsight.com/courses/managing-kubernetes-api-server-pods) require you to attach a shell to an instance of the `gcr.io/google-samples/hello-app:1.0` container, which seems to not be possible with the current version of this container. I've posted a [question on Ask Ubuntu](https://askubuntu.com/questions/1448795/why-can-i-not-attach-a-shell-to-googles-hello-appv1-container) on this problem and have reached out to the instructor on this course to suggest an alternative container.
+### Attaching shells to Containers
+* Several courses in this Pluralsight path require you to attach a shell to an instance of the `gcr.io/google-samples/hello-app:1.0` container, which is not possible with the current version of this container. I've posted a [question on Ask Ubuntu](https://askubuntu.com/questions/1448795/why-can-i-not-attach-a-shell-to-googles-hello-appv1-container) on this problem and have reached out to the instructor on this course to suggest an alternative container.
+
+In the meantime, I have changed a few of the relevant Deployment definitions to instead use the 'nginx' container, which allows you to attach a shell.
 
 ## Progress by course
 - [x] Kubernetes Installation and Configuration Fundamentals
 - [X] Managing the Kubernetes API Server and Pods
-- [ ] Managing Kubernetes Controllers and Deployments
-- [ ] Configuring and Managing Kubernetes Storage and Scheduling
+- [X] Managing Kubernetes Controllers and Deployments
+- [X] Configuring and Managing Kubernetes Storage and Scheduling
 - [ ] Configuring and Managing Kubernetes Networking, Services, and Ingress
 - [ ] Maintaining, Monitoring and Troubleshooting Kubernetes
 - [ ] Configuring and Managing Kubernetes Security
 
 ## Configuring the virtual machines
-These instructions assume you have already installed Vagrant on your system.
+Prereq: You will need to have installed Vagrant on your machine.
 
 ### i. IP address ranges
 You will need to specify the VM address ranges by copying the [networks.conf](vagrant/networks.conf) file:
