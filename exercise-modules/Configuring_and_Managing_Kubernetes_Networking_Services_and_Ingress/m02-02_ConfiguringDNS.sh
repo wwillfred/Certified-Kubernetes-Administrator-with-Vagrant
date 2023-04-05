@@ -1,0 +1,4 @@
+m02-02 Investigating Networking
+
+vagrant ssh c1-cp1
+cd /vagrant/declarative-config-files/Configuring_and_Managing_Kubernetes_Networking_Services_and_Ingress/02_Kubernetes_Networking_Fundamentals
