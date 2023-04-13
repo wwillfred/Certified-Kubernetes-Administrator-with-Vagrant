@@ -79,18 +79,18 @@ cd /vagrant/declarative-config-files/Configuring_and_Managing_Kubernetes_Network
 
 # Azure Kubernetes Service - kubenet
 # Get all Nodes and their IP information, INTERNAL-IP is the real IP of the Node
-# sudo apt-get update
-# sudo apt-get install azure-cli
-# az login
-# az group create --name "Kubernetes-Cloud" --location centralus
-# az aks get-versions --location centralus -o table
-# az aks create \
-#     --resource-group "Kubernetes-Cloud" \
-#     --generate-ssh-keys \
-#     --name CSCluster \
-#     --node-count 3 
-# az aks get-credentials --resource-group "Kubernetes-Cloud" --name CSCluster
-# kubectl config get-contexts
+sudo apt-get update
+sudo apt-get install azure-cli
+az login
+az group create --name "Kubernetes-Cloud" --location centralus
+az aks get-versions --location centralus -o table
+az aks create \
+    --resource-group "Kubernetes-Cloud" \
+    --generate-ssh-keys \
+    --name CSCluster \
+    --node-count 3 
+az aks get-credentials --resource-group "Kubernetes-Cloud" --name CSCluster
+kubectl config get-contexts
 kubectl config use-context 'CSCluster'
 
 # Let's deploy a basic workload, hello-world with3 replicas
@@ -104,3 +104,52 @@ kubectl get nodes -o wide
 #   rather than tunnels. Let's explore
 # Check out Addresses and PodCIDR
 kubectl describe nodes | more
+
+# The Pods are getting IPs from their Node's PodCIDR Range
+kubectl get pods -o wide
+
+# Access an AKS Node via SSH so we can examine its network config which uses kubenet
+# https://docs.microsoft.com/en-us/azure/aks/ssh#configure-virtual-machine-scale-set-based-aks-clusters-for-ssh-access
+NODENAME=$(kubectl get nodes -o jsonpath='{.items[0].metadata.name}')
+kubectl debug node/$NODENAME -it --image=mcr.microsoft.com/aks/fundamental/base-ubuntu:v0.0.11
+
+# Check out the routes, notice the route to the local Pod Network matching PodCIDR for this
+#   Node sending traffic to cbr0
+# The routes for the other PodCIDR ranges on the other Nodes are implemented in the cloud's
+#   virtual network.
+route
+
+# In Azure, these routes are implemented as route tables assigned to the virtual machines
+#   for your Nodes.
+# You'll find the routes implemented in the Resource Group as a Route Table assigned to
+#   the subnet the Nodes are on.
+# This is a link to my Azure account, yours will vary.
+# https://portal.azure.com/#@nocentinohotmail.onmicrosoft.com/resource/subscriptions/fd0c5e48-eea6-4b37-a076-0e23e0df74cb/resourceGroups/mc_kubernetes-cloud_cscluster_centralus/providers/Microsoft.Network/routeTables/aks-agentpool-89481420-routetable/overview
+
+# Check out the eth0, actual Node interface IP, then cbr0 which is the bridge the Pods are
+#   attached to and has an IP on the Pod Network.
+# Each Pod has an eth0 interface on the bridge, which you see here, and an interface
+#   inside the container which will have the Pod IP.
+ip addr
+
+# Let's check out the bridge's 'connections'
+brctl show
+
+# Exit the Container on the Node
+exit
+
+# Here is the Pod's interface and its IP.
+# This interface is attached to the cbr0 bridge on the Node to get access to the Pod network.
+
+PODNAME=$(kubectl get pods -o jsonpath='{ .items[0].metadata.name }')
+kubectl exec -it $PODNAME -- ip addr
+
+# And inside the Pod, there's a default route in the Pod to the interface 10.224.0.1
+#   which is the bridge interface cbr0.
+# Then the Node will route it on the Node network for reachability to other Nodes.
+kubectl exec -it $PODNAME -- route
+
+# Delete the deployment in AKS, switch to the local cluster and delete the Deployment too.
+kubectl delete -f Deployment.yaml
+kubectl config use-context kubernetes-admin@kubernetes
+kubectl delete -f Deployment.yaml
