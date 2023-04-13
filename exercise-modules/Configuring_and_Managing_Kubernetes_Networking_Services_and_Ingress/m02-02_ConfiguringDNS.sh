@@ -38,3 +38,16 @@ nslookup www.centinosystems.com $SERVICEIP
 
 # On c1-cp1, let's put the default configuration back, using . forward /etc/resolv.conf
 kubectl apply -f CoreDNSConfigDefault.yaml --namespace kube-system
+
+
+#3. Configuring Pod DNS client Configuration
+kubectl apply -f DeploymentCustomDns.yaml
+
+# Let's check the DNS configuration of a Pod created with that configuration
+# This line will grab the first Pod matching the defined selector
+PODNAME=$(kubectl get pods --selector=app=hello-world-customdns -o jsonpath='{ .items[0].metadata.name }')
+echo $PODNAME
+kubectl exec -it $PODNAME -- cat /etc/resolv.conf
+
+# Clean up our resources
+kubectl delete -f DeploymentCustomDns.yaml
