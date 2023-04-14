@@ -51,3 +51,25 @@ kubectl exec -it $PODNAME -- cat /etc/resolv.conf
 
 # Clean up our resources
 kubectl delete -f DeploymentCustomDns.yaml
+
+# Demo 3 - let's get a Pod's DNS A record and a Service's A record
+# Create a Deployment and a Service
+kubectl apply -f Deployment.yaml
+
+# Get the Pod's and their IP addresses
+kubectl get pods -o wide
+
+# Get the address of our DNS Service again... just in case
+SERVICEIP=$(kubectl get service --namespace kube-system kube-dns -o jsonpath='{ .spec.clusterIP }')
+
+# For one of the Pods replace the dots in the IP address with dashes, for example 192.168.206.68 becomes 192-168-206-68
+# We'll look at some additional examples of Service Discovery in the next module too.
+nslookup 192-168-206-[XX].default.pod.cluster.local $SERVICEIP
+
+# Our Services also get DNS A records
+# There's more on Service A records in the next demo
+kubectl get service
+nslookup hello-world.default.svc.cluster.local $SERVICEIP
+
+# Clean up our resources
+kubectl delete -f Deployment.yaml
