@@ -73,3 +73,61 @@ nslookup hello-world.default.svc.cluster.local $SERVICEIP
 
 # Clean up our resources
 kubectl delete -f Deployment.yaml
+
+
+# TODO for the viewer...you can use this technique to verify your DNS forwarder 
+#   configuration from the first demo in this file.
+# Recreate the custom configuration by applying the custom configmap defined in
+#   CoreDNSConfigCustom.yaml
+# Logging in CoreDNS will log the query, but not which forwarder it was sent to.
+# We can use tcpdump to listen to the packets on the wire to see where the DNS queries are
+#   being sent to.
+
+kubectl apply -f CoreDNSConfigCustom.yaml
+
+# Find the name of a Node running one of the DNS Pods running...so we're going to observe
+#   DNS queries there.
+DNSPODNODENAME=$(kubectl get pods --namespace kube-system --selector=k8s-app=kube-dns -o jsonpath='{ .items[0].spec.nodeName }')
+echo $DNSPODNODENAME
+
+# Let's log into THAT node running the DNS Pod and start a tcpdump to watch our DNS queries
+#   in action.
+# Your interface (-i) name may be different
+ssh $DNSPODNODENAME
+sudo tcpdump -i eth0 port 53 -n
+
+# In a second terminal, let's test our DNS configuration from a Pod to make sure we're
+#   using the configured forwarder.
+# When this Pod starts, it will point to our cluster DNS service.
+# Install dnsutils for nslookup and dig
+vagrant ssh c1-cp1
+kubectl run -it --rm debian --image=debian
+apt-get update && apt-get install dnsutils -y
+
+# In our debian Pod let's look at the DNS config and run two test DNS queries
+# The nameserver will be your cluster DNS service cluster IP.
+# We'll query two domains to generate traffic for our tcpdump
+cat /etc/resolv.conf
+nslookup www.pluralsight.com
+nslookup www.centinosystems.com
+
+# Switch back to our second terminal and review the tcpdump, confirming each query is going
+#   to the correct forwarder
+# Here is some example output...www.pluralsight.com is going to 1.1.1.1 and 
+#   centinosystems.com is going to 9.9.9.9
+# 172.16.94.13.63841 > 1.1.1.1.53: 24753+ A? www.pluralsight.com. (37)
+# 172.16.94.134253 > 9.9.9.9.53: 29485+ [1au] A? www.centinosystems.com. (63)
+
+# Exit the tcpdump
+ctrl+c
+
+# Log out of the Node, back onto c1-cp1
+exit
+
+# Switch sessions and break out of our Pod, and it will be deleted
+exit
+
+# Exit out of our second SSH session and get a shell back on c1-cp1
+exit
+
+kubectl delete -f CoreDNSConfiCustom.yaml
