@@ -159,3 +159,24 @@ az group delete --name Kubernetes-Cloud
 
 # Let's switch back to our local cluster
 kubectl config use-context kubernetes-admin@kubernetes
+
+# Declarative examples
+kubectl apply -f service-hello-world-clusterip.yaml
+kubectl get service
+
+# Creating a NodePort with a predefined port, first with a port outside of the NodePort
+#   range then a corrected one
+kubectl apply -f service-hello-world-nodeport-incorrect.yaml
+kubectl apply -f service-hello-world-nodeport.yaml
+kubectl get service
+
+# Switch contexts to Azure to create a cloud LoadBalancer
+kubectl config use-context 'CSCluster'
+kubectl apply -f service-hello-world-loadbalancer.yaml
+kubectl get service
+
+# Clean up these resources
+kubectl delete -f service-hello-world-loadbalancer.yaml
+kubectl config use-context kubernetes-admin@kubernetes
+kubectl delete -f service-hello-world-nodeport.yaml
+kubectl delete -f service-hello-world-clusterip.yaml
