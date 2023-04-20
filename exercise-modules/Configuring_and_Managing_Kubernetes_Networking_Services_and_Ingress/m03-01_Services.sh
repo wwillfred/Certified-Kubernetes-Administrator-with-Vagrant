@@ -36,3 +36,20 @@ kubectl get endpoints hello-world-clusterip
 PODIP=$(kubectl get endpoints hello-world-clusterip -o jsonpath='{ .subsets[].addresses[].ip }')
 echo $PODIP
 curl http://$PODIP:8080
+
+# Scale the deployment, new endpoints are registered automatically
+kubectl scale deployment hello-world-clusterip --replicas=6
+kubectl get endpoints hello-world-clusterip
+
+# Access the Service inside the cluster, this time our requests will be load
+#   balanced...whooo!
+curl http://$SERVICEIP
+
+# The Service's Endpoints match the labels, let's look at the Service and its
+#   selector and the Pod's labels
+kubectl describe service hello-world-clusterip
+kubectl get pods --show-labels
+
+# Clean up these resources for the next demo
+kubectl delete deployments hello-world-clusterip
+kubectl delete service hello-world-clusterip
