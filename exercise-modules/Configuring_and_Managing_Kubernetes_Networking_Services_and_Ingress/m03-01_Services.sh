@@ -53,3 +53,46 @@ kubectl get pods --show-labels
 # Clean up these resources for the next demo
 kubectl delete deployments hello-world-clusterip
 kubectl delete service hello-world-clusterip
+
+
+# 2 - Creating a NodePort Service
+# Imperative, create a Deployment with one Replica
+kubectl create deployment hello-world-nodeport --image=psk8s.azurecr.io/hello-app:1.0
+
+# When creating a Service, you can define a type, if you don't define a type, the
+#   default is ClusterIP
+kubectl expose deployment hello-world-nodeport \
+    --port=80 --target-port=8080 --type NodePort
+
+# Let's check out the Services details, there's the Node Port after the : in the Ports
+#   column. It's also got a ClusterIP and Port
+# This NodePort Service is available on that NodePort on each node in the cluster
+kubectl get service
+
+CLUSTERIP=$(kubectl get service hello-world-nodeport -o jsonpath='{ .spec.clusterIP }')
+PORT=$(kubectl get service hello-world-nodeport -o jsonpath='{ .spec.ports[].port }')
+NODEPORT=$(kubectl get service hello-world-nodeport -o jsonpath='{ .spec.ports[].nodePort }')
+
+# Let's access the Services on the Node Port...we can do that on each Node in the
+#   cluster and from outside the cluster...regardless of where the Pod actually is
+
+# We have only one Pod online supporting our Service
+kubectl get pods -o wide
+
+# And we can access the Service by hitting the Node port on ANY node in the cluster on
+#   the Node's real IP or Name
+# This will forward to the cluster IP and get load balanced to a Pod. Even if there is
+#   only one Pod.
+curl http://c1-cp1:$NODEPORT
+curl http://c1-node1:$NODEPORT
+curl http://c1-node2:$NODEPORT
+curl http://c1-node3:$NODEPORT
+
+# And a Node port Service is also listening on a Cluster IP, in fact the Node Port
+#   traffic is routed to the ClusterIP
+echo $CLUSTERIP:$PORT
+curl http://$CLUSTERIP:$PORT
+
+# Let's delete that Service
+kubectl delete service hello-world-nodeport
+kubectl delete deployment hello-world-nodeport
