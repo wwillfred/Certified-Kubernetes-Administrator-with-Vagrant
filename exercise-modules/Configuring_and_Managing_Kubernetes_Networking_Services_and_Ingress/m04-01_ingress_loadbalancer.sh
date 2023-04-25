@@ -81,3 +81,57 @@ kubectl describe ingress ingress-single
 INGRESSIP=$(kubectl get ingress -o jsonpath='{ .items[].status.loadBalancer.ingress[].ip }')
 curl http://$INGRESSIP
 
+
+
+# Demo 3 - Multiple Services with path-based routing
+# Let's create two additional services
+kubectl create deployment hello-world-service-blue --image=psk8s.azurecr.io/hello-app:1.0
+kubectl create deployment hello-world-service-red --image=psk8s.azurecr.io/hello-app:1.0
+
+kubectl expose deployment hello-world-service-blue --port=4343 --target-port=8080 --type=ClusterIP
+kubectl expose deployment hello-world-service-red --port=4242 --target-port=8080 --type=ClusterIP
+
+# Let's create an ingress with paths each routing to different backend services.
+kubectl apply -f ingress-path.yaml
+
+# We now have two, one for all hosts and the other for our defined host with two paths
+# The Ingress controller is implementing these ingresses and we're sharing the one public
+#   IP, don't proceed until you see # the address populated for your ingress
+kubectl get ingress --watch
+
+# We can see the host, the path, and the backends.
+kubectl describe ingress ingress-path
+
+# Our ingress on all hosts is still routing to Service single, since we're accessing the 
+#   URL with an IP and not a domain name or host header.
+curl http://$INGRESSIP/
+
+# Our paths are routing to their correct Services, if we specify a host header or use a
+#   DNS name to access the Ingress. That's how the rule will route the request.
+curl http://$INGRESSIP/red --header 'Host: path.example.com'
+curl http://$INGRESSIP/blue --header 'Host: path.example.com'
+
+# If we don't specify a path we'll get a 404 while specifying a host header.
+# We'll need to configure a path and backend for / or define a default backend for the
+#   service
+curl http://$INGRESSIP/      --header 'Host: path.example.com'
+
+# Let's add a backend to the Ingress listening on path.example.com pointing to the single
+#   service
+kubectl apply -f ingress-path-backend.yaml
+
+# We can see the default backend, and in the Rules, the host, the path, and the backends
+kubectl describe ingress ingress-path
+
+# Now we'll hit the default backend Service, single
+curl http://$INGRESSIP/ --header 'Host: path.example.com'
+
+
+# Demo 4 - Name-based virtual hosts
+# Now, let's route traffic to the Services using name-based virtual hosts, rather than
+#   paths, wait for ADDRESS to be populated
+kubectl apply -f ingress-namebased.yaml
+kubectl get ingress --watch
+
+curl http://$INGRESSIP/ --header 'Host: red.example.com'
+curl http://$INGRESSIP/ --header 'Host: blue.example.com'
