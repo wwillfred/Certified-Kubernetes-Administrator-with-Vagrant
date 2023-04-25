@@ -40,4 +40,37 @@ nslookup hello-world-clusterip.ns1.svc.cluster.local 10.96.0.10
 # Our service in the default namespace is still there, these are completely unique services.
 nslookup hello-world-clusterip.default.svc.cluster.local 10.96.0.10
 
-#
+
+# Environment variables
+
+# Get the environment variables for the Pod in our default namespace
+# More details about the lifecycle of variables in "Configuring and Managing Kubernetes
+#   Storage and Scheduling"
+# Only the Kubernetes Service is available? Why? I created the Deployment THEN I created
+#   the Service
+PODNAME=$(kubectl get pods -o jsonpath='{ .items[].metadata.name }')
+echo $PODNAME
+kubectl exec -it $PODNAME -- env | sort
+
+# Environment variables are only created at Pod startup, so let's delete the Pod
+kubectl delete pod $PODNAME
+
+# And check the environment variables again
+PODNAME=$(kubectl get pods -o jsonpath='{ .items[].metadata.name }')
+echo $PODNAME
+kubectl exec -it $PODNAME -- env | sort
+
+# ExternalName
+kubectl apply -f service-externalname.yaml
+
+# The record is in the form <servicename>.<namespace>.<clusterdomain>. You may get an
+#   error that says ** server can't find hello-world.api.example.com: NXDOMAIN this is OK.
+nslookup hello-world-api.default.svc.cluster.local 10.96.0.10
+
+# Let's clean up our resources in this demo
+kubectl delete service hello-world-api
+kubectl delete service hello-world-clusterip
+kubectl delete service hello-world-clusterip --namespace ns1
+kubectl delete deployment hello-world-clusterip
+kubectl delete deployment hello-world-clusterip --namespace ns1
+kubectl delete namespace ns1
