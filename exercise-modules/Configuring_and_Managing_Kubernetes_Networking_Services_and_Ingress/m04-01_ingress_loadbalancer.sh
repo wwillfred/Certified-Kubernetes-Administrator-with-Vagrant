@@ -135,3 +135,43 @@ kubectl get ingress --watch
 
 curl http://$INGRESSIP/ --header 'Host: red.example.com'
 curl http://$INGRESSIP/ --header 'Host: blue.example.com'
+
+
+# TLS Example
+# 1 - Generate a certificate
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -keyout tls.key -out tls.crt -subj "/C=US/ST=ILLIONOIS/L=CHICAGO/O=IT/OU=IT/CN=tls.example.com"
+
+# 2 - Create a Secret with the key and the certificate
+kubectl create secret tls tls-secret --key tls.key --cert tls.crt
+
+# 3 - Create an Ingress using the certificate and key. This uses HTTPS for both / and /red
+kubectl apply -f ingress-tls.yaml
+
+# Check the status...do we have an IP?
+kubectl get ingress --watch
+
+# Test access to the hostname...we need --resolve because we haven't registered the DNS
+#   name
+# TLS is a layer lower than host headers, so we have to specify the correct DNS name.
+curl https://tls.example.com:443 --resolve tls.example.com:443:$INGRESSIP --insecure --verbose
+
+
+# Clean up from our demo
+kubectl delete ingresses ingress-path
+kubectl delete ingresses ingress-tls
+kubectl delete ingresses ingress-namebased
+kubectl delete deployment hello-world-service-single
+kubectl delete deployment hello-world-service-red
+kubectl delete deployment hello-world-service-blue
+kubectl delete service hello-world-service-single
+kubectl delete service hello-world-service-red
+kubectl delete service hello-world-service-blue
+kubectl delete secret tls-secret
+rm tls.crt
+rm tls.key
+
+# Delete the Ingress, Ingress Controller, and other configuration elements
+kubectl delete -f ./cloud/deploy.yaml
+
+az group delete --name Kubernetes-Cloud
