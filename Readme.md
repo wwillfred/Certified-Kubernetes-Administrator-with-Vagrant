@@ -5,6 +5,10 @@ This repository contains step-by-step instructions for completing the exercises 
 
 For a repository that automates the installation and configuration of a similar Kubernetes cluster with Vagrant, check out [this repo](https://github.com/techiescamp/vagrant-kubeadm-kubernetes).
 
+### c1-storage VM
+The course "Configuring and Managing Kubernetes Storage and Scheduling" utilizes the VM `c1-storage`, so for exercises in this course you will need to explicitly boot up that VM by calling `vagrant up c1-storage`.
+
+
 ### Attaching shells to Containers
 * Several courses in this Pluralsight path require you to attach a shell to an instance of the `gcr.io/google-samples/hello-app:1.0` container, which is not possible with the current version of this container. I've posted a [question on Ask Ubuntu](https://askubuntu.com/questions/1448795/why-can-i-not-attach-a-shell-to-googles-hello-appv1-container) on this problem and have reached out to the instructor on this course to suggest an alternative container.
 
@@ -15,7 +19,7 @@ In the meantime, I have changed a few of the relevant Deployment definitions to 
 - [X] Managing the Kubernetes API Server and Pods
 - [X] Managing Kubernetes Controllers and Deployments
 - [X] Configuring and Managing Kubernetes Storage and Scheduling
-- [ ] Configuring and Managing Kubernetes Networking, Services, and Ingress
+- [X] Configuring and Managing Kubernetes Networking, Services, and Ingress
 - [ ] Maintaining, Monitoring and Troubleshooting Kubernetes
 - [ ] Configuring and Managing Kubernetes Security
 
