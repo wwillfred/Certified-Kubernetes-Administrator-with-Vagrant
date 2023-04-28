@@ -92,3 +92,40 @@ kubectl get secret test-secret
 
 ### NOTE - if the secret doesn't come back...you may to reboot all of the Nodes in the
 #   cluster to clear the cache.
+
+# Another common restore method is to update the data-path to the restored data path in
+#   the static pod manifest.
+# The kubelet will restart the Pod due to the configuration change
+
+# Let's delete an object again then run a restore to get it back
+kubectl delete secret test-secret
+
+# Using the same back from earlier
+# Run the restore to a define data-dir, rather than the current working directory
+sudo ETCDCTL_API=3 etcdctl snapshot restore /var/lib/dat-backup.db --data-dir=/var/lib/etcd-restore
+
+# Copy the current static Pod manifest as a precaution.
+sudo cp /etc/kubernetes/manifests/etcd.yaml .
+
+# Update the static Pod manifest to point to that /var/lib/etcd-restore...in three
+#   places
+
+# Update
+#    - --data-dir=/var/lib/etcd-restore
+#...
+#   volumeMounts:
+#    - mountPath: /var/lib/etcd-restore
+#...
+#   volumes:
+#    - hostPath:
+#        name: etcd-data
+#        path: /var/lib/etcd-restore
+
+sudo vi /etc/kubernetes/manifests/etcd.yaml
+
+# This will cause the control plane Pods to restart...let's check it at the Container
+#   runtime levl
+sudo crictl --runtime-endpoint unix:///run/containerd/containerd.sock ps
+
+# Is our secret back?
+kubectl get secret test-secret
