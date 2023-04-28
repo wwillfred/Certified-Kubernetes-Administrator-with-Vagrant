@@ -25,8 +25,7 @@ ps -aux | grep etcd
 kubectl exec -it etcd-c1-cp1 -n kube-system \
     -- /bin/sh -c 'ETCDCTL_API=3 /usr/local/bin/etcd --version' | head
 export RELEASE="3.5.3"
-wget https://github.com/etcd-io/etcd/releases/download/v${RELEASE}/etcd-v${RELEASE}-linux-amd6
-4.tar.gz
+wget https://github.com/etcd-io/etcd/releases/download/v${RELEASE}/etcd-v${RELEASE}-linux-amd64.tar.gz
 tar -zxvf etcd-v${RELEASE}-linux-amd64.tar.gz
 cd etcd-v${RELEASE}-linux-amd64
 sudo cp etcdctl /usr/local/bin
@@ -129,3 +128,13 @@ sudo crictl --runtime-endpoint unix:///run/containerd/containerd.sock ps
 
 # Is our secret back?
 kubectl get secret test-secret
+
+# Remove etcdctl from the Control Plane Node if you want.
+# Put back the original etcd.yaml
+kubectl delete secret test-secret
+sudo cp etcd.yaml /etc/kubernetes/manifests/
+sudo rm /var/lib/dat-backup.db
+sudo rm /usr/local/bin/etcdctl
+sudo rm -rf /var/lib/etcd.OLD
+sudo rm -rf /var/lib/etcd-restore
+rm /home/vagrant/etcd-v${RELEASE}-linux-amd64.tar.gz
