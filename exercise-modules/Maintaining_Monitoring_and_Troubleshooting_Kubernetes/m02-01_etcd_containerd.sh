@@ -60,3 +60,35 @@ sudo ETCDCTL_API=3 etcdctl --endpoints=$ENDPOINT \
 
 # Read the metadata from the backup/snapshot to print out the snapshot's status
 sudo ETCDCTL_API=3 etcdctl --write-out=table snapshot status /var/lib/dat-backup.db
+
+# Now let's delete an object and then run a restore to get it back
+kubectl delete secret test-secret
+
+# Run the restore to a second folder...this will restore to the current directory
+sudo ETCDCTL_API=3 etcdctl snapshot restore /var/lib/dat-backup.db
+
+# Confirm our data are in the restore directory
+sudo ls -l
+
+# Move the old etcd data to a safe location
+sudo mv /var/lib/etcd /var/lib/etcd.OLD
+
+# Restart the static pod for etcd...
+# If you kubectl delete it will NOT restart the static Pod as it's managed by the kubelet
+#   not a Controller or the control plane.
+sudo crictl --runtime-endpoint unix:///run/containerd/containerd.sock ps | grep etcd
+CONTAINER_ID=$(sudo crictl --runtime-endpoint unix:///run/containerd/containerd.sock ps | grep etcd | awk '{ print $1 }')
+echo $CONTAINER_ID
+
+# Stop the etcd container for our etcd Pod and move our restored data into place
+sudo crictl --runtime-endpoint unix:///run/containerd/containerd.sock stop $CONTAINER_ID
+sudo mv ./default.etcd /var/lib/etcd
+
+# Wait for etcd, the scheduler and controller manager to recreate
+sudo crictl --runtime-endpoint unix:///run/containerd/containerd.sock ps
+
+# Is our secret back? This may take a minute or two to come back due to caching.
+kubectl get secret test-secret
+
+### NOTE - if the secret doesn't come back...you may to reboot all of the Nodes in the
+#   cluster to clear the cache.
