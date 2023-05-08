@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", path: "disable-swap.sh"
 
   config.vm.define "c1-cp1" do |c1cp1|
-    c1cp1.vm.box = "bento/ubuntu-18.04"
+    c1cp1.vm.box = "bento/ubuntu-22.04"
     # c1cp1.disksize.size = DISK_SIZE
     c1cp1.vm.network "private_network", ip: "172.16.94.10"
     c1cp1.vm.hostname = "c1-cp1"
@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "c1-node1" do |c1node1|
-    c1node1.vm.box = "bento/ubuntu-18.04"
+    c1node1.vm.box = "bento/ubuntu-22.04"
     # c1node1.disksize.size = DISK_SIZE
     c1node1.vm.network "private_network", ip: "172.16.94.11"
     c1node1.vm.hostname = "c1-node1"
@@ -37,7 +37,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "c1-node2" do |c1node2|
-    c1node2.vm.box = "bento/ubuntu-18.04"
+    c1node2.vm.box = "bento/ubuntu-22.04"
     # c1node2.disksize.size = DISK_SIZE
     c1node2.vm.network "private_network", ip: "172.16.94.12"
     c1node2.vm.hostname = "c1-node2"
@@ -50,7 +50,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define "c1-node3" do |c1node3|
-    c1node3.vm.box = "bento/ubuntu-18.04"
+    c1node3.vm.box = "bento/ubuntu-22.04"
     # c1node3.disksize.size = DISK_SIZE
     c1node3.vm.network "private_network", ip: "172.16.94.13"
     c1node3.vm.hostname = "c1-node3"
@@ -63,7 +63,7 @@ Vagrant.configure("2") do |config|
   end
  
   config.vm.define "c1-storage", autostart: false do |c1storage|
-    c1storage.vm.box = "bento/ubuntu-18.04"
+    c1storage.vm.box = "bento/ubuntu-22.04"
     # c1storage.disksize.size = DISK_SIZE
     c1storage.vm.network "private_network", ip: "172.16.94.5"
     c1storage.vm.hostname = "c1-storage"
