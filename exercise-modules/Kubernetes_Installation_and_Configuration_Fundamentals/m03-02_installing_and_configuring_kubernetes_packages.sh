@@ -14,7 +14,7 @@ apt-cache policy kubelet | head -n 20
 #Install the required packages, if needed we can request a specific version.
 #Use this version because in a later course we will upgrade the cluster to a newer version.
 #Try to pick one version back because later in this series, we'll run an upgrade
-VERSION=1.24.3-00
+VERSION=1.27.0-00
 sudo apt-get install -y kubelet=$VERSION kubeadm=$VERSION kubectl=$VERSION
 sudo apt-mark hold kubelet kubeadm kubectl containerd
 

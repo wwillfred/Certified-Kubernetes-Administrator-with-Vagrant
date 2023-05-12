@@ -10,7 +10,7 @@
 ### 0 - Create a cluster
 # Create our kubernetes cluster, specify a pod network range matching that in calico.yaml!
 # Only on the Control Plane Node, download the yaml files for the pod network.
-wget https://docs.projectcalico.org/manifests/calico.yaml
+wget https://raw.githubusercontent.com/projectcalico/calico/master/manifests/calico.yaml
 
 # Look inside calico.yaml and find the setting for Pod Network IP address range CALICO_IPV4POOL_CIDR,
 # adjust if needed for your infrastructure to ensure that the Pod network IP
@@ -18,10 +18,10 @@ wget https://docs.projectcalico.org/manifests/calico.yaml
 vi calico.yaml
 
 # You can now just use kubeadm init to bootstrap the cluster
-# the IP addresses are important because of Vagrant's networking implementation.
-sudo kubeadm init --kubernetes-version v1.24.3 --apiserver-advertise-address="172.16.94.10" --apiserver-cert-extra-sans="172.16.94.10" --pod-network-cidr=192.168.0.0/16
+# the IP addresses are important because of Vagrant's networking implementation!!!
+sudo kubeadm init --kubernetes-version v1.27.0 --apiserver-advertise-address="172.16.94.10" --apiserver-cert-extra-sans="172.16.94.10" --pod-network-cidr=192.168.0.0/16
 
-# sudo kubeadm init # remove the kubernetes-version parameter if you want to use the latest.
+# sudo kubeadm init --apiserver-advertise-address="172.16.94.10" --apiserver-cert-extra-sans="172.16.94.10" --pod-network-cidr=192.168.0.0/16 # remove the kubernetes-version parameter if you want to use the latest.
 
 # Before moving on, review the output of the cluster creation process including the kubeadm init phases,
 # the admin.conf setup and the node join command
@@ -58,13 +58,13 @@ ls /etc/kubernetes/manifests
 sudo more /etc/kubernetes/manifests/etcd.yaml
 sudo more /etc/kubernetes/manifests/kube-apiserver.yaml
 
-# Check out the directory where the kubeconfig files live for each of the control plan pods.
+# Check out the directory where the kubeconfig files live for each of the control plane pods.
 ls /etc/kubernetes
 
 # Configure kubectl to use the internal IP address that we configured for the Vagrant private network.
 # We have to do this because by default, kubelet uses the IP address of the first Ethernet adapter, which can only be used by Vagrant to ssh into the node.
 
-IP_ADDR=$(ifconfig eth1 | grep -i mask | awk '{print $2}'| cut -f2 -d: | sudo tee /etc/default/kubelet)
+IP_ADDR=$(ip -o -4 addr list eth1 | awk '{print $4}' | cut -d/ -f1)
 echo "KUBELET_EXTRA_ARGS='--node-ip $IP_ADDR'" | sudo tee /etc/default/kubelet
 
 # Restart kubelet to read the IP address from the config file we just created.

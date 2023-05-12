@@ -27,9 +27,15 @@ EOF
 # Apply sysctl params without reboot
 sudo sysctl --system
 
-# Install containerd
+# Install containerd... we need to install from the Docker repo to get containerd 1.6, the
+#   Ubuntu repo stops at 1.5.9
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
 sudo apt-get update
-sudo apt-get install -y containerd
+sudo apt-get install -y containerd.io
 
 # Create a containerd configuration file
 sudo mkdir -p /etc/containerd
@@ -43,7 +49,7 @@ sudo containerd config default | sudo tee /etc/containerd/config.toml
 # Change SystemdCgroup = false to SystemdCgroup = true
 sudo sed -i 's/            SystemdCgroup = false/            SystemdCgroup = true/' /etc/containerd/config.toml
 
-# Verify the change was ade
+# Verify the change was made
 sudo vi /etc/containerd/config.toml
 
 # Restart containerd with the new configuration
