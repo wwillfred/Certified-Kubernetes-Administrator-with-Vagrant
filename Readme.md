@@ -26,27 +26,44 @@ In the meantime, I have changed a few of the relevant Deployment definitions to 
 ## Configuring the virtual machines
 Prereq: You will need to have installed Vagrant on your machine.
 
+Note: as of May 2023, Vagrant 2.x is not compatible with VirtualBox version 7.x, so VirtualBox version 6.1.x should be used.
+
 ### i. IP address ranges
 You will need to specify the VM address ranges by copying the [networks.conf](vagrant/networks.conf) file:
+
 ```
 sudo cp networks.conf /etc/vbox/networks.conf
 ```
 
-### ii. Specify disk size, if desired
+### ii. Install Vagrant VBGuest plugin
+This plugin enables Vagrant to install the appropriate VirtualBox guest additions for the version of VirtualBox running on the host, instead of using the most recent.
+
+```
+vagrant plugin install vagrant-vbguest
+```
+
+### iii. Install Vagrant Reload Provisioner
+This plugin enables automated reloading of virtual machines, which would otherwise have to be done manually after running the [disable-swap.sh](/vagrant/disable-swap.sh) provisioner script.
+
+```
+vagrant plugin install vagrant-reload
+```
+
+### iv. Specify disk size, if desired
 If you want to specify disk size of the virtual machines: Before calling `vagrant up`, you will need to install the vagrant plugin 'vagrant-disksize' for managing disk size (the course suggests 100GB for each VM, but I'm not sure if that much space is strictly necessary):
 ```
 vagrant plugin install vagrant-disksize
 ```
 Then you will need to uncomment out the lines in the [Vagrantfile](vagrant/Vagrantfile) relevant to disk size, including running the [disk-extend.sh](vagrant/disk-extend.sh) script.
 
-### iii. Make the first vagrant up call
+### v. Make the first vagrant up call
 
 ```
 cd vagrant
 vagrant up
 ```
 
-### iv. Check that each VM is correctly provisioned
+### vi. Check that each VM is correctly provisioned
 
 Check that swap is disabled in each VM (e.g. in node c1-cp1)([source][1]):
 ```
@@ -60,7 +77,7 @@ vagrant ssh c1-cp1
 df -h /
 ```
 
-### v. Getting started
+### vii. Get started
 Step through [m03-01_installing_and_configuring_containerd.sh](exercise-modules/Kubernetes_Installation_and_Configuration_Fundamentals/m03-01_installing_and_configuring_containerd.sh) to begin. 
 
 [1]: https://unix.stackexchange.com/questions/23072/how-can-i-check-if-swap-is-active-from-the-command-line
