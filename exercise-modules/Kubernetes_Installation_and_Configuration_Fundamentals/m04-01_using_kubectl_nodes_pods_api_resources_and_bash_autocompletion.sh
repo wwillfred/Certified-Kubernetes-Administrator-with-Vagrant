@@ -1,4 +1,4 @@
-# m04
+# m04-01
 
 ## Using kubectl: Nodes, pods, API resources and bash auto-completion
 
@@ -15,7 +15,7 @@ kubectl get nodes
 # Additional info about each node in the cluster
 kubectl get nodes -o wide
 
-# Let's get a list of pods...but there isn't any running.
+# Let's get a list of pods...but there aren't any running.
 kubectl get pods
 
 # True, but let's get a list of system pods. A namespace is a way to group resources together.
