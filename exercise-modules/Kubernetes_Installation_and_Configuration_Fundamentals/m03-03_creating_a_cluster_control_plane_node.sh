@@ -1,4 +1,4 @@
-# m03.sh
+# m03-03
 
 ## Create control plane node - containerd
 
@@ -6,6 +6,7 @@
 # If you are using containerd, make sure Docker isn't installed.
 # kubeadm init will try to auto-detect the container runtaime and at the moment
 # if both are installed it will pick docker first.
+# sudo apt-get remove docker
 
 ### 0 - Create a cluster
 # Create our kubernetes cluster, specify a pod network range matching that in calico.yaml!
@@ -19,7 +20,7 @@ vi calico.yaml
 
 # You can now just use kubeadm init to bootstrap the cluster
 # the IP addresses are important because of Vagrant's networking implementation!!!
-sudo kubeadm init --kubernetes-version v1.27.0 --apiserver-advertise-address="172.16.94.10" --apiserver-cert-extra-sans="172.16.94.10" --pod-network-cidr=192.168.0.0/16
+sudo kubeadm init --kubernetes-version v1.27.1 --apiserver-advertise-address="172.16.94.10" --apiserver-cert-extra-sans="172.16.94.10" --pod-network-cidr=192.168.0.0/16
 
 # sudo kubeadm init --apiserver-advertise-address="172.16.94.10" --apiserver-cert-extra-sans="172.16.94.10" --pod-network-cidr=192.168.0.0/16 # remove the kubernetes-version parameter if you want to use the latest.
 

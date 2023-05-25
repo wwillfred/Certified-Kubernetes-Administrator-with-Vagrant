@@ -1,14 +1,9 @@
-# m03.sh
+# m03-04
 
 ## Adding a node to your cluster - containerd
 
 # For this demo, ssh into c1-node1 (and subsequently for c1-node2 and c1-node3)
 vagrant ssh c1-node1
-
-# Disable swap, swapoff then edit your fstab removing any entry for swap partitions
-# You can recover the space with fdisk. You may want to reboot to ensure your config is ok.
-swapoff -a
-vi /etc/fstab
 
 ###IMPORTANT####
 # I expect this code to change a bit to make the installation process more streamlined.
@@ -39,9 +34,14 @@ EOF
 # Apply sysctl params without reboot
 sudo sysctl --system
 
-# Install containerd
+# Install containerd...we need to install from the docker repo to get containerd
+#   1.6, the ubuntu repo stops at 1.5.9
+curl -fsSL https:/download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
 sudo apt-get update
-sudo apt-get install -y containerd
+sudo apt-get install -y containerd.io
 
 # Configure containerd
 sudo mkdir -p /etc/containerd
@@ -70,18 +70,19 @@ sudo systemctl restart containerd
 
 # Install Kubernetes packages - kubeadm, kubelet, and kubectl
 # Add Google's apt repository gpg key
-sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key --keyring /usr/share/keyrings/cloud.google.gpg add -
 
 # Add the Kubernetes apt repository
-echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+echo "deb [signed-by=/usr/share/keyrings//cloud.google.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 
 # Update the package list
 sudo apt-get update
+
 apt-cache policy kubelet | head -n 20
 
 # Install the required packages, if needed we can request a specific version.
 # Pick the same version you used on the Control Plane Node above.
-VERSION=1.24.3-00
+VERSION=1.27.1-00
 sudo apt-get install -y kubelet=$VERSION kubeadm=$VERSION kubectl=$VERSION
 sudo apt-mark hold kubelet kubeadm kubectl containerd
 
@@ -101,7 +102,7 @@ sudo systemctl enable containerd.service
 # Update the node's internal IP address
 # We do this because by default, kubectl assigns the node's first adapter (which should only be used for Vagrant to communicate with the VM) IP address as the node's internal IP, which will break some communication with the API Server.
 
-IP_ADDR=$(ifconfig eth1 | grep -i mask | awk '{print $2}'| cut -f2 -d: | sudo tee /etc/default/kubelet)
+IP_ADDR=$(ip -o -4 addr list eth1 | awk '{print $4}' | cut -d/ -f1)
 
 echo "KUBELET_EXTRA_ARGS='--node-ip $IP_ADDR'" | sudo tee /etc/default/kubelet
 
@@ -113,10 +114,7 @@ sudo systemctl restart kubelet
 exit
 vagrant ssh c1-cp1
 
-# Verify that the internal IP address of the node we are working on was successfully changed:
-kubectl get nodes -o wide
-
-# On c1-cp1 - if you didn't keep the output, on the Control Plan Node, you can get the token.
+# On c1-cp1 - if you didn't keep the output, on the Control Plane Node, you can get the token.
 kubeadm token list
 
 # If you need to generate a new token, perhaps the old one timed out/expired.
@@ -149,6 +147,9 @@ kubectl get pods --all-namespaces --watch
 
 # Still on the Control Plane Node, look for this added node's status as ready.
 kubectl get nodes
+
+# Verify that the internal IP address of the node we are working on was successfully changed:
+kubectl get nodes -o wide
 
 # GO BACK TO THE TOP AND DO THE SAME FOR c1-node2 and c1-node3
 # Just SSH into c1-node2 and c1-node3 and run the commands again.
