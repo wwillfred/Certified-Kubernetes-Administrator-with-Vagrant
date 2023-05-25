@@ -3,6 +3,8 @@
 ## Overview
 This repository contains step-by-step instructions for completing the exercises in the Pluralsight path [Certified Kubernetes Administrator (CKA)](https://app.pluralsight.com/paths/certificate/certified-kubernetes-administrator). A unique feature of this repository is that it includes code for implementing the courses' exercises with Vagrant virtual machines. 
 
+The most recent Kubernetes version these instructions have been tested on is 1.27.1.
+
 For a repository that automates the installation and configuration of a similar Kubernetes cluster with Vagrant, check out [this repo](https://github.com/techiescamp/vagrant-kubeadm-kubernetes).
 
 ### c1-storage VM
@@ -26,7 +28,9 @@ In the meantime, I have changed a few of the relevant Deployment definitions to 
 ## Configuring the virtual machines
 Prereq: You will need to have installed Vagrant on your machine.
 
-Note: as of May 2023, Vagrant 2.x is not compatible with VirtualBox version 7.x, so VirtualBox version 6.1.x should be used.
+Note: As of May 2023, Vagrant 2.x is not compatible with VirtualBox version 7.x, so VirtualBox version 6.1.x should be used.
+
+Note: These instructions are being tested on virtual machines with 1250 MB of RAM, on an Intel-based Mac with 8GB of RAM. If the VMs' RAM amount is not specified, the development host machine will panic once each node has been configured (due to resource constraints).
 
 ### i. IP address ranges
 You will need to specify the VM address ranges by copying the [networks.conf](vagrant/networks.conf) file:
