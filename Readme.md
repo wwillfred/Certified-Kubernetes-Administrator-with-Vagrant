@@ -30,7 +30,7 @@ Prereq: You will need to have installed Vagrant on your machine.
 
 Note: As of May 2023, Vagrant 2.x is not compatible with VirtualBox version 7.x, so VirtualBox version 6.1.x should be used.
 
-Note: These instructions are being tested on virtual machines with 1250 MB of RAM, on an Intel-based Mac with 8GB of RAM. If the VMs' RAM amount is not specified, the development host machine will panic once each node has been configured (due to resource constraints).
+Note: These instructions are being tested on virtual machines with 1250 MB of RAM, on an Intel-based Mac with 8GB of RAM. If the VMs' RAM amount is not specified, the development host machine will panic once each node has been configured.
 
 ### i. IP address ranges
 You will need to specify the VM address ranges by copying the [networks.conf](vagrant/networks.conf) file:
@@ -47,7 +47,7 @@ vagrant plugin install vagrant-vbguest
 ```
 
 ### iii. Install Vagrant Reload Provisioner
-This plugin enables automated reloading of virtual machines, which would otherwise have to be done manually after running the [disable-swap.sh](/vagrant/disable-swap.sh) provisioner script.
+This plugin enables automated reloading of virtual machines, which would otherwise have to be done manually after the Vagrantfile provisioner has run the [disable-swap.sh](/vagrant/disable-swap.sh) provisioner script.
 
 ```
 vagrant plugin install vagrant-reload
