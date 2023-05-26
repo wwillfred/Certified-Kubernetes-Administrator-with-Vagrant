@@ -12,7 +12,7 @@ The course "Configuring and Managing Kubernetes Storage and Scheduling" utilizes
 
 
 ### Attaching shells to Containers
-* Several courses in this Pluralsight path require you to attach a shell to an instance of the `gcr.io/google-samples/hello-app:1.0` container, which is not possible with the current version of this container. I've posted a [question on Ask Ubuntu](https://askubuntu.com/questions/1448795/why-can-i-not-attach-a-shell-to-googles-hello-appv1-container) on this problem and have reached out to the instructor on this course to suggest an alternative container.
+Several courses in this Pluralsight path require you to attach a shell to an instance of the `gcr.io/google-samples/hello-app:1.0` container, which is not possible with the current version of this container. I've posted a [question on Ask Ubuntu](https://askubuntu.com/questions/1448795/why-can-i-not-attach-a-shell-to-googles-hello-appv1-container) on this problem and have reached out to the instructor on this course to suggest an alternative container.
 
 In the meantime, I have changed a few of the relevant Deployment definitions to instead use the `nginx` container, which allows you to attach a shell.
 
