@@ -22,7 +22,7 @@ In the meantime, I have changed a few of the relevant Deployment definitions to 
 - [X] Managing Kubernetes Controllers and Deployments
 - [X] Configuring and Managing Kubernetes Storage and Scheduling
 - [X] Configuring and Managing Kubernetes Networking, Services, and Ingress
-- [ ] Maintaining, Monitoring and Troubleshooting Kubernetes
+- [X] Maintaining, Monitoring and Troubleshooting Kubernetes
 - [ ] Configuring and Managing Kubernetes Security
 
 ## Configuring the virtual machines

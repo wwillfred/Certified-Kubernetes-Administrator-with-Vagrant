@@ -2,5 +2,5 @@ m04-02 Troubleshooting Control Plane Break Stuff 1
 
 vagrant ssh c1-cp1
 
-cd /vagrant/declarative-config-files/Maintaining_Monitoring_and_Troubleshooting_Kubernetes/04_Troubleshooting_Kubernetes_Clusters
-
+sudo mv /etc/kubernetes/manifests/ /etc/kubernetes/manifests.wrong
+sleep 10
